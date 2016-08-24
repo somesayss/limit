@@ -13,8 +13,10 @@
 <body>
 <script type="text/javascript">
 ;(function(limit){
+	limit.limitFixed = true;
 	// begin
-	limit('hello limit').toLog();
+	// 
+	limit(1).plus(2, 4).toLog();
 
 })(limit);
 </script>
