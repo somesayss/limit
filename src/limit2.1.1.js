@@ -1511,7 +1511,7 @@
 		defineIt('plus,+', {
 			format: checkFlattenArgs,
 			fixed(...args){
-				let maxScale = getMaxScale(args);
+				let maxScale = getMaxScale(...args);
 				if( limit.isNull(maxScale) ){
 					return NaN;
 				};
@@ -1525,7 +1525,7 @@
 		defineIt('minus,-', {
 			format: checkFlattenArgs,
 			fixed(...args){
-				let maxScale = getMaxScale(args);
+				let maxScale = getMaxScale(...args);
 				if( limit.isNull(maxScale) ){
 					return NaN;
 				};

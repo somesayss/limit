@@ -1970,7 +1970,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				args[_key33] = arguments[_key33];
 			}
 
-			var maxScale = getMaxScale(args);
+			var maxScale = getMaxScale.apply(undefined, args);
 			if (limit.isNull(maxScale)) {
 				return NaN;
 			};
@@ -1988,7 +1988,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				args[_key34] = arguments[_key34];
 			}
 
-			var maxScale = getMaxScale(args);
+			var maxScale = getMaxScale.apply(undefined, args);
 			if (limit.isNull(maxScale)) {
 				return NaN;
 			};

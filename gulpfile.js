@@ -20,7 +20,7 @@ gulp.task('brow', () => {
 // babel编译
 gulp.task('babel', () => {
 	return gulp.src(['src/**/*.js'])
-		.pipe(babel({presets: ['es2015', 'stage-0']}))
+		.pipe(babel({presets: ['es2015', 'stage-0']}).on('error', (e) => {console.log(e.message)}))
 		.pipe(gulp.dest('dist'));
 });
 
