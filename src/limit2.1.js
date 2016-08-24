@@ -6,6 +6,7 @@
 
 "use strict";
 ;(function(WIN){
+
 	// 变量
 	function limit(val){
 		if( !(this instanceof limit) ){
