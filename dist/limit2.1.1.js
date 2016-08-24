@@ -84,6 +84,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	var padEnd = stringProto.padEnd;
 	var bind = functionProto.bind;
 	var parse = JSON.parse;
+	var stringify = JSON.stringify;
 
 	// 传递器
 
@@ -141,22 +142,17 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		} else {
 			value = config.value;
 		};
-		typeof value === 'function' && (value.toString = function () {
-			return 'function () { [native code] }';
-		});
-		if (defineProperty) {
-			defineProperty(limit, name, {
-				value: value,
-				writable: false, //只读
-				enumerable: true, //被枚举
-				configurable: false //更改内部属性
-			});
-		} else {
-			if (limit[name] !== void 0) {
-				throw new TypeError('Cannot redefine property: ' + name);
+		if (typeof value === 'function') {
+			value.toString = function () {
+				return 'function () { [native code] }';
 			};
-			limit[name] = value;
 		};
+		defineProperty(limit, name, {
+			value: value,
+			writable: false, //只读
+			enumerable: true, //被枚举
+			configurable: false //更改内部属性
+		});
 		if (arr.length) {
 			return defineIt(arr.join(','), config);
 		} else {
@@ -2146,13 +2142,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 	// 对IE下 JSON.stringify 的修复
 	;(function (JSON) {
-		var fun = JSON.stringify,
-		    rex = /(\\u\w{4})/g;
+		var rex = /(\\u\w{4})/g;
 		JSON.stringify = function (json) {
 			if (json == null) {
 				json = '';
 			};
-			return fun(json).replace(rex, function (a) {
+			return stringify(json).replace(rex, function (a) {
 				return new Function('return "' + a + '"')();
 			});
 		};

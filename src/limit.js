@@ -43,7 +43,7 @@
 	const { fromCodePoint } = String;
 	const { trim, codePointAt, startsWith, endsWith, repeat, padStart, padEnd } = stringProto;
 	const { bind } = functionProto;
-	const { parse } = JSON;
+	const { parse, stringify } = JSON;
 
 	// 传递器
 	const K = val => val;
@@ -81,20 +81,15 @@
 		}else{
 			value = config.value;
 		};
-		typeof value === 'function' && (value.toString = () => 'function () { [native code] }');
-		if( defineProperty ){
-			defineProperty(limit, name, {
-				value,
-				writable: false, //只读
-				enumerable: true, //被枚举
-				configurable: false //更改内部属性
-			});
-		}else{
-			if( limit[name] !== void 0){
-				throw new TypeError('Cannot redefine property: ' + name);
-			};
-			limit[name] = value;
+		if( typeof value === 'function' ){
+			value.toString = () => 'function () { [native code] }';
 		};
+		defineProperty(limit, name, {
+			value,
+			writable: false, //只读
+			enumerable: true, //被枚举
+			configurable: false //更改内部属性
+		});
 		if(arr.length){
 			return defineIt(arr.join(','), config);
 		}else{
@@ -1666,13 +1661,12 @@
 
 	// 对IE下 JSON.stringify 的修复
 	;(function(JSON){
-		var fun = JSON.stringify,
-			rex = /(\\u\w{4})/g;
+		let rex = /(\\u\w{4})/g;
 		JSON.stringify = function(json){
 			if( json == null ){
 				json = '';
 			};
-			return fun(json).replace(rex, function(a){
+			return stringify(json).replace(rex, function(a){
 				return new Function('return "'+a+'"')();
 			});
 		};

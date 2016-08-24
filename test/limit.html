@@ -8,18 +8,19 @@
 <meta name="description" content="" />
 <meta name="keywords" content=""  />
 <title>limit.js</title>
+<script type="text/javascript" charset="utf-8" src="/libs/es5.js"></script>
 <script type="text/javascript" charset="utf-8" src="/dist/limit.js"></script>
 </head>
 <body>
 <script type="text/javascript">
-;(function(limit){
-	limit.limitFixed = true;
-	// begin
+;(function(){
 	// 
-	limit(1).plus(3, [.4]).toLog();
+	limit({a: '啊'}).toStringLog();
 	// test new
 
-})(limit);
+
+
+})();
 </script>
 </body>
 </html>
