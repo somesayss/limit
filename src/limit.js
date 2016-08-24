@@ -90,11 +90,10 @@
 			enumerable: true, //被枚举
 			configurable: false //更改内部属性
 		});
-		if(arr.length){
-			return defineIt(arr.join(','), config);
-		}else{
+		if(!arr.length){
 			return value;
 		};
+		return defineIt(arr.join(','), config);
 	};
 
 	// 传递器
