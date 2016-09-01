@@ -507,6 +507,20 @@
 			value: n => limit._getLoopKey(n).length
 		});
 
+		// mix: stack
+		defineIt('stack', {
+			format: checkTargetNoEqualNull,
+			fixed(obj, ...args){
+				limit.each(args, (val1) => {
+					limit.each(obj, (val2, key) => {
+						let val = val1[key];
+						limit.isDefined(val) && (obj[key] = val);
+					});
+				});
+				return obj;
+			}
+		});
+
 	// --数组-- //
 
 		// mix: toArray
