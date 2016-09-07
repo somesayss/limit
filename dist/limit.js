@@ -1512,12 +1512,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	}();
 
 	;
-	// 
-	if (WIN.Promise) {
-		Promise.prototype.Catch = function (fn) {
-			return this.then(null, fn);
-		};
+
+	MyPromise.prototype['catch'] = function (fn) {
+		return this.then(null, fn);
 	};
+
 	defineIt('promise', {
 		when: function when() {
 			return !!WIN.Promise;
@@ -2146,6 +2145,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		},
 		valueOf: function valueOf() {
 			return limit.last(this.__value__);
+		},
+		getValue: function getValue() {
+			return this.valueOf();
 		},
 		toLog: function toLog() {
 			limit['...'](this.valueOf());

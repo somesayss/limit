@@ -30,7 +30,7 @@ gulp.task('babel', () => {
 
 // 压缩
 gulp.task('zip', ['babel'], () => {
-    return gulp.src(['dist/**/*.js'])
+    return gulp.src(['dist/**/*.js', '!dist/**/*.min.js'])
         .pipe( uglify() )
         .pipe( rename({suffix: '.min'}) )
         .pipe(gulp.dest('dist'));

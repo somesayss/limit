@@ -1133,12 +1133,11 @@
 				});
 			}
 		};
-		// 
-		if(WIN.Promise){
-			Promise.prototype.Catch = function(fn){
-				return this.then(null, fn);
-			};
+
+		MyPromise.prototype['catch'] = function(fn){
+			return this.then(null, fn);
 		};
+
 		defineIt('promise', {
 			when: () => !!WIN.Promise,
 			priority: () => Promise,
@@ -1661,6 +1660,9 @@
 		},
 		valueOf(){
 			return limit.last(this.__value__);
+		},
+		getValue(){
+			return this.valueOf();
 		},
 		toLog(){
 			limit['...']( this.valueOf() );
