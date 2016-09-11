@@ -431,7 +431,13 @@
 		
 		defineIt('keys', {
 			when: () => !!keys,
-			priority: (...args) => keys(...args),
+			priority: (...args) => {
+				try{
+					return keys(...args);
+				}catch(e){
+					return keysFixed(...args);
+				}
+			},
 			format: checkTargetNoEqualNull,
 			fixed: keysFixed
 		});
@@ -1005,7 +1011,7 @@
 							if(promise.PromiseStatus === 'pedding'){
 								promise.PromiseStatus = 'resolved';
 								promise.PromiseValue = val;
-								promise._clean();
+								promise.cleanStack();
 							};
 						});
 					};
@@ -1014,7 +1020,7 @@
 							if(promise.PromiseStatus === 'pedding'){
 								promise.PromiseStatus = 'rejected';
 								promise.PromiseValue = val;
-								promise._clean();
+								promise.cleanStack();
 							};
 						});
 						setTimeout(() => {
@@ -1035,8 +1041,6 @@
 				};
 			}
 			then(suc, err){
-				suc = limit.cb(suc);
-				err = limit.cb(err);
 				let me = this;
 				if(me.promiseList){
 					let originMe = me;
@@ -1045,14 +1049,40 @@
 				};
 				me.Stack.push({suc, err});
 				if(me.PromiseStatus !== 'pedding' && !me.cleanStatus){
-					me._clean();	
+					me.cleanStack();	
 				};
 				return me;
 			}
-			Catch(err){
-				return this.then(null, err);
+			errorBack(){
+				let me = this;
+				// 如果没有
+				if( !me.Stack.length ){
+					return setTimeout(() => {
+						throw '(in promise) ' + me.PromiseValue;
+					}, 0);
+				}else{
+					return me.cleanStack();
+				};
 			}
-			_clean(){
+			successBack(){
+				let me = this,
+					PromiseValue = me.PromiseValue;
+				// 如果返回是个promise对象
+				if( PromiseValue && PromiseValue.then ){
+					PromiseValue.then((val) => {
+						me.PromiseValue = val;
+						me.PromiseStatus = 'resolved';
+					}, (val) => {
+						me.PromiseValue = val;
+						me.PromiseStatus = 'rejected';
+					}).then(() => {
+						return me.cleanStack();
+					});
+				}else{
+					return me.cleanStack();
+				};
+			}
+			cleanStack(){
 				let me = this,
 					one = me.Stack.shift();
 				me.cleanStatus = 'init';
@@ -1061,23 +1091,27 @@
 						try{
 							switch(me.PromiseStatus){
 								case 'resolved':
-									me.PromiseValue = one.suc(me.PromiseValue);
+									if(one.suc){
+										me.PromiseValue = one.suc.call(undefined, me.PromiseValue);
+									}else{
+										return me.cleanStack();
+									};
 								break;
 								case 'rejected':
-									me.PromiseValue = one.err(me.PromiseValue);
+									if(one.err){
+										me.PromiseValue = one.err.call(undefined, me.PromiseValue);
+									}else{
+										return me.errorBack();
+									};
 								break;
 							};
 							me.PromiseStatus = 'resolved';
 						}catch(e){
 							me.PromiseStatus = 'rejected';
 							me.PromiseValue = e;
-							if(!me.Stack.length){
-								setTimeout(() => {
-									throw '(in promise) ' + e;
-								}, 0);
-							};
+							return me.errorBack();
 						};
-						me._clean();
+						return me.successBack();
 					}, 0);
 				}else{
 					delete me.cleanStatus;

@@ -670,7 +670,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			return !!keys;
 		},
 		priority: function priority() {
-			return keys.apply(undefined, arguments);
+			try {
+				return keys.apply(undefined, arguments);
+			} catch (e) {
+				return keysFixed.apply(undefined, arguments);
+			}
 		},
 		format: checkTargetNoEqualNull,
 		fixed: keysFixed
@@ -1360,7 +1364,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 						if (promise.PromiseStatus === 'pedding') {
 							promise.PromiseStatus = 'resolved';
 							promise.PromiseValue = val;
-							promise._clean();
+							promise.cleanStack();
 						};
 					});
 				};
@@ -1369,7 +1373,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 						if (promise.PromiseStatus === 'pedding') {
 							promise.PromiseStatus = 'rejected';
 							promise.PromiseValue = val;
-							promise._clean();
+							promise.cleanStack();
 						};
 					});
 					setTimeout(function () {
@@ -1393,8 +1397,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		_createClass(MyPromise, [{
 			key: "then",
 			value: function then(suc, err) {
-				suc = limit.cb(suc);
-				err = limit.cb(err);
 				var me = this;
 				if (me.promiseList) {
 					var originMe = me;
@@ -1403,18 +1405,46 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				};
 				me.Stack.push({ suc: suc, err: err });
 				if (me.PromiseStatus !== 'pedding' && !me.cleanStatus) {
-					me._clean();
+					me.cleanStack();
 				};
 				return me;
 			}
 		}, {
-			key: "Catch",
-			value: function Catch(err) {
-				return this.then(null, err);
+			key: "errorBack",
+			value: function errorBack() {
+				var me = this;
+				// 如果没有
+				if (!me.Stack.length) {
+					return setTimeout(function () {
+						throw '(in promise) ' + me.PromiseValue;
+					}, 0);
+				} else {
+					return me.cleanStack();
+				};
 			}
 		}, {
-			key: "_clean",
-			value: function _clean() {
+			key: "successBack",
+			value: function successBack() {
+				var me = this,
+				    PromiseValue = me.PromiseValue;
+				// 如果返回是个promise对象
+				if (PromiseValue && PromiseValue.then) {
+					PromiseValue.then(function (val) {
+						me.PromiseValue = val;
+						me.PromiseStatus = 'resolved';
+					}, function (val) {
+						me.PromiseValue = val;
+						me.PromiseStatus = 'rejected';
+					}).then(function () {
+						return me.cleanStack();
+					});
+				} else {
+					return me.cleanStack();
+				};
+			}
+		}, {
+			key: "cleanStack",
+			value: function cleanStack() {
 				var me = this,
 				    one = me.Stack.shift();
 				me.cleanStatus = 'init';
@@ -1423,23 +1453,27 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 						try {
 							switch (me.PromiseStatus) {
 								case 'resolved':
-									me.PromiseValue = one.suc(me.PromiseValue);
+									if (one.suc) {
+										me.PromiseValue = one.suc.call(undefined, me.PromiseValue);
+									} else {
+										return me.cleanStack();
+									};
 									break;
 								case 'rejected':
-									me.PromiseValue = one.err(me.PromiseValue);
+									if (one.err) {
+										me.PromiseValue = one.err.call(undefined, me.PromiseValue);
+									} else {
+										return me.errorBack();
+									};
 									break;
 							};
 							me.PromiseStatus = 'resolved';
 						} catch (e) {
 							me.PromiseStatus = 'rejected';
 							me.PromiseValue = e;
-							if (!me.Stack.length) {
-								setTimeout(function () {
-									throw '(in promise) ' + e;
-								}, 0);
-							};
+							return me.errorBack();
 						};
-						me._clean();
+						return me.successBack();
 					}, 0);
 				} else {
 					delete me.cleanStatus;
