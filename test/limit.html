@@ -23,40 +23,7 @@
 	// begin
 	limit({a: '啊'}).toStringLog();
 
-	function p1(){
-		return new Promise(function(resolve, reject){
-			setTimeout(resolve, 1e3);
-		});
-	};
-
-	function p2(){
-		return new Promise(function(resolve, reject){
-			setTimeout(function(){
-				// reject('错误p2');
-				resolve('成功p2');
-			}, 1e3);
-		});
-	};
-
-	function p3(){
-		return new Promise(function(resolve, reject){
-			setTimeout(resolve, 1e3);
-		});
-	};
-
-	p1().then(function(){
-		console.log(123);
-		return p2();
-	}).then(function(a){
-		console.log(456, a);
-		return p3();
-	}).then(function(a){
-		console.log(789, a);
-	})['catch'](function(e){
-		console.error('catch1', e);
-	}).then(function(){
-		console.log('xixi')
-	});
+	
 
 
 
