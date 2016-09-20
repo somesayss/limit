@@ -227,9 +227,19 @@
 			fixed: n => limit.isInteger(n) && -9007199254740992 < n && n < 9007199254740992 
 		});
 
-		// 是否为空
+		// 是否为空 '' [] {} null undefined
 		defineIt('isEmpty', {
-			value: n => n == null || limit.size(n) === 0
+			value(n){
+				if( n == null ){
+					return true;
+				}else if( limit.isFunction(n) ){
+					return false;
+				}else if( limit.isArrayLike(n) || limit.isObject( n.valueOf() ) ){
+					return limit.size(n) === 0;
+				}else{
+					return false;
+				};
+			}
 		});
 
 	// --检查参数-- //

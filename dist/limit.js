@@ -380,10 +380,18 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		}
 	});
 
-	// 是否为空
+	// 是否为空 '' [] {} null undefined
 	defineIt('isEmpty', {
 		value: function value(n) {
-			return n == null || limit.size(n) === 0;
+			if (n == null) {
+				return true;
+			} else if (limit.isFunction(n)) {
+				return false;
+			} else if (limit.isArrayLike(n) || limit.isObject(n.valueOf())) {
+				return limit.size(n) === 0;
+			} else {
+				return false;
+			};
 		}
 	});
 
