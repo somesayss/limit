@@ -1641,17 +1641,33 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		return this.then(null, fn);
 	};
 
+	MyPromise.prototype['finally'] = function (fn) {
+		return this.then(function (v) {
+			return v;
+		}, function (e) {
+			return e;
+		}).then(fn);
+	};
+
+	var winPromise = WIN.Promise;
+
 	defineIt('promise', {
 		when: function when() {
-			return !!WIN.Promise;
+			return !!winPromise;
 		},
 		priority: function priority() {
-			return Promise;
+			return winPromise;
 		},
 		fixed: function fixed() {
 			return MyPromise;
 		}
 	});
+
+	if (WIN.Promise) {
+		WIN.Promise.prototype['finally'] = MyPromise.prototype['finally'];
+	} else {
+		WIN.Promise = MyPromise;
+	};
 
 	// mix: bind 对bind做了统一兼容处理
 	defineIt('bind', {
@@ -1670,28 +1686,17 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				args1[_key27] = arguments[_key27];
 			}
 
-			function main() {
-				for (var _len28 = arguments.length, args2 = Array(_len28), _key28 = 0; _key28 < _len28; _key28++) {
-					args2[_key28] = arguments[_key28];
-				}
-
-				return Function.call.apply(bind, [].concat(args1, args2))();
-			};
-			// 咋骗，可以让兼容方法伪装的更像
-			main.toString = function () {
-				return 'function () { [native code] }';
-			};
-			return main;
+			return Function.call.apply(bind, [].concat(args1));
 		},
 		fixed: function fixed(fn) {
-			for (var _len29 = arguments.length, args1 = Array(_len29 > 1 ? _len29 - 1 : 0), _key29 = 1; _key29 < _len29; _key29++) {
-				args1[_key29 - 1] = arguments[_key29];
+			for (var _len28 = arguments.length, args1 = Array(_len28 > 1 ? _len28 - 1 : 0), _key28 = 1; _key28 < _len28; _key28++) {
+				args1[_key28 - 1] = arguments[_key28];
 			}
 
 			// 兼容的方法
 			function main() {
-				for (var _len30 = arguments.length, args2 = Array(_len30), _key30 = 0; _key30 < _len30; _key30++) {
-					args2[_key30] = arguments[_key30];
+				for (var _len29 = arguments.length, args2 = Array(_len29), _key29 = 0; _key29 < _len29; _key29++) {
+					args2[_key29] = arguments[_key29];
 				}
 
 				return Function.call.apply(fn, [].concat(args1, args2));
@@ -1707,13 +1712,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	// mix: compose 组合 a(b(c())) => (a(), b(), c());
 	defineIt('compose', {
 		value: function value() {
-			for (var _len31 = arguments.length, args1 = Array(_len31), _key31 = 0; _key31 < _len31; _key31++) {
-				args1[_key31] = arguments[_key31];
+			for (var _len30 = arguments.length, args1 = Array(_len30), _key30 = 0; _key30 < _len30; _key30++) {
+				args1[_key30] = arguments[_key30];
 			}
 
 			return function () {
-				for (var _len32 = arguments.length, args2 = Array(_len32), _key32 = 0; _key32 < _len32; _key32++) {
-					args2[_key32] = arguments[_key32];
+				for (var _len31 = arguments.length, args2 = Array(_len31), _key31 = 0; _key31 < _len31; _key31++) {
+					args2[_key31] = arguments[_key31];
 				}
 
 				var result = args2;
@@ -2090,8 +2095,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 	// 获取最大的小数位
 	var getMaxScale = function getMaxScale() {
-		for (var _len33 = arguments.length, args = Array(_len33), _key33 = 0; _key33 < _len33; _key33++) {
-			args[_key33] = arguments[_key33];
+		for (var _len32 = arguments.length, args = Array(_len32), _key32 = 0; _key32 < _len32; _key32++) {
+			args[_key32] = arguments[_key32];
 		}
 
 		if (!checkFiniteNum(args)) {
@@ -2106,8 +2111,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	defineIt('plus,+', {
 		format: checkFlattenArgs,
 		fixed: function fixed() {
-			for (var _len34 = arguments.length, args = Array(_len34), _key34 = 0; _key34 < _len34; _key34++) {
-				args[_key34] = arguments[_key34];
+			for (var _len33 = arguments.length, args = Array(_len33), _key33 = 0; _key33 < _len33; _key33++) {
+				args[_key33] = arguments[_key33];
 			}
 
 			var maxScale = getMaxScale.apply(undefined, args);
@@ -2124,8 +2129,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	defineIt('minus,-', {
 		format: checkFlattenArgs,
 		fixed: function fixed() {
-			for (var _len35 = arguments.length, args = Array(_len35), _key35 = 0; _key35 < _len35; _key35++) {
-				args[_key35] = arguments[_key35];
+			for (var _len34 = arguments.length, args = Array(_len34), _key34 = 0; _key34 < _len34; _key34++) {
+				args[_key34] = arguments[_key34];
 			}
 
 			var maxScale = getMaxScale.apply(undefined, args);
@@ -2153,8 +2158,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	defineIt('multiply,*', {
 		format: checkFlattenArgs,
 		fixed: function fixed() {
-			for (var _len36 = arguments.length, args = Array(_len36), _key36 = 0; _key36 < _len36; _key36++) {
-				args[_key36] = arguments[_key36];
+			for (var _len35 = arguments.length, args = Array(_len35), _key35 = 0; _key35 < _len35; _key35++) {
+				args[_key35] = arguments[_key35];
 			}
 
 			if (!checkFiniteNum(args)) {
@@ -2170,8 +2175,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	defineIt('except,/', {
 		format: checkFlattenArgs,
 		fixed: function fixed() {
-			for (var _len37 = arguments.length, args = Array(_len37), _key37 = 0; _key37 < _len37; _key37++) {
-				args[_key37] = arguments[_key37];
+			for (var _len36 = arguments.length, args = Array(_len36), _key36 = 0; _key36 < _len36; _key36++) {
+				args[_key36] = arguments[_key36];
 			}
 
 			if (!checkFiniteNum(args)) {
@@ -2226,8 +2231,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			};
 			// 正常入参
 			return formatStr.replace(REG_EXP_DATA, function () {
-				for (var _len38 = arguments.length, args = Array(_len38), _key38 = 0; _key38 < _len38; _key38++) {
-					args[_key38] = arguments[_key38];
+				for (var _len37 = arguments.length, args = Array(_len37), _key37 = 0; _key37 < _len37; _key37++) {
+					args[_key37] = arguments[_key37];
 				}
 
 				var arr = [];
@@ -2255,8 +2260,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	limit.each(limit, function (val, key) {
 		if (limit.isFunction(val)) {
 			limit.prototype[key] = function () {
-				for (var _len39 = arguments.length, args = Array(_len39), _key39 = 0; _key39 < _len39; _key39++) {
-					args[_key39] = arguments[_key39];
+				for (var _len38 = arguments.length, args = Array(_len38), _key38 = 0; _key38 < _len38; _key38++) {
+					args[_key38] = arguments[_key38];
 				}
 
 				this.__value__.push(limit[key].apply(limit, [limit.last(this.__value__)].concat(args)));

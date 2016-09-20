@@ -16,15 +16,23 @@
 "use strict";
 ;(function(){
 
-	limit.limitFixed = true;
-
-	var Promise = limit.promise();
-
 	// begin
 	limit({a: '啊'}).toStringLog();
 
-	
+	function main(){
+		return new Promise(function(resolve){
+			setTimeout(function(){
+				resolve(1)
+			}, 1e3);
+		});
+	};
 
+	main().then(function(){
+		console.log('then');
+	})['finally'](function(e){
+		console.log('finally');
+	});
+	
 
 
 

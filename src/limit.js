@@ -1257,23 +1257,30 @@
 			return this.then(null, fn);
 		};
 
+		MyPromise.prototype['finally'] = function(fn){
+			return this.then(v => v, e => e).then(fn);
+		};
+
+		const winPromise = WIN.Promise;
+
 		defineIt('promise', {
-			when: () => !!WIN.Promise,
-			priority: () => Promise,
+			when: () => !!winPromise,
+			priority: () => winPromise,
 			fixed: () => MyPromise
 		});
+
+		if( WIN.Promise ){
+			WIN.Promise.prototype['finally'] = MyPromise.prototype['finally'];
+		}else{
+			WIN.Promise = MyPromise;
+		};
 
 		// mix: bind 对bind做了统一兼容处理
 		defineIt('bind', {
 			format: (fn, ...args) => [limit.cb(fn), ...args],
 			when: (fn) => bind && fn.bind === bind,
 			priority(...args1){
-				function main(...args2){
-					return Function.call.apply(bind, [...args1, ...args2])();
-				};
-				// 咋骗，可以让兼容方法伪装的更像
-				main.toString = () => 'function () { [native code] }';
-				return main;
+				return Function.call.apply(bind, [...args1]);
 			},
 			fixed(fn, ...args1){
 				// 兼容的方法
