@@ -766,7 +766,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			limit.some(args, function (val) {
 				try {
 					obj = obj[val];
-					return !limit.isObject(obj);
+					return !limit.isObject(obj.valueOf());
 				} catch (e) {
 					return obj = undefined, true;
 				};
@@ -1650,11 +1650,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	};
 
 	MyPromise.prototype['finally'] = function (fn) {
-		return this.then(function (v) {
-			return v;
-		}, function (e) {
-			return e;
-		}).then(fn);
+		return this.then(K, K).then(fn);
 	};
 
 	var winPromise = WIN.Promise;
@@ -1671,8 +1667,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		}
 	});
 
-	if (WIN.Promise) {
-		WIN.Promise.prototype['finally'] = MyPromise.prototype['finally'];
+	if (winPromise) {
+		winPromise.prototype['finally'] = MyPromise.prototype['finally'];
 	} else {
 		WIN.Promise = MyPromise;
 	};

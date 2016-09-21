@@ -509,7 +509,7 @@
 				limit.some(args, val => {
 					try{
 						obj = obj[val];
-						return !limit.isObject(obj);
+						return !limit.isObject( obj.valueOf() );
 					}catch(e){
 						return obj = undefined, true;
 					};
@@ -1268,7 +1268,7 @@
 		};
 
 		MyPromise.prototype['finally'] = function(fn){
-			return this.then(v => v, e => e).then(fn);
+			return this.then(K, K).then(fn);
 		};
 
 		const winPromise = WIN.Promise;
@@ -1279,8 +1279,8 @@
 			fixed: () => MyPromise
 		});
 
-		if( WIN.Promise ){
-			WIN.Promise.prototype['finally'] = MyPromise.prototype['finally'];
+		if( winPromise ){
+			winPromise.prototype['finally'] = MyPromise.prototype['finally'];
 		}else{
 			WIN.Promise = MyPromise;
 		};
