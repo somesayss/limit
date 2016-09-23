@@ -1385,7 +1385,7 @@
 			format: checkTargetNoEqualNull,
 			fixed(obj, val1 = '&', val2 = '='){
 				let list = [];
-				limit.each(obj, (val, key) => {
+				!limit.isArrayLike(obj) && limit.each(obj, (val, key) => {
 					val = val.valueOf();
 					if( limit.isObject(val) ){
 						let str = JSON.stringify(val);

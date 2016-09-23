@@ -1809,7 +1809,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			var val2 = arguments.length <= 2 || arguments[2] === undefined ? '=' : arguments[2];
 
 			var list = [];
-			limit.each(obj, function (val, key) {
+			!limit.isArrayLike(obj) && limit.each(obj, function (val, key) {
 				val = val.valueOf();
 				if (limit.isObject(val)) {
 					var str = JSON.stringify(val);
