@@ -19,22 +19,6 @@
 	// begin
 	limit({a: '啊'}).toStringLog();
 
-	function main(){
-		return new Promise(function(resolve){
-			setTimeout(function(){
-				resolve(1)
-			}, 1e3);
-		});
-	};
-
-	main().then(function(){
-		console.log('then');
-		// throw 123;
-		return 456;
-	})['finally'](function(e){
-		console.log('finally',e);
-	});
-	
 
 })();
 </script>

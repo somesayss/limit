@@ -1343,7 +1343,7 @@
 			}
 		});
 
-		// 解析字符串
+		// 字符串解析成对象
 		defineIt('parseString', {
 			format: checkTargetWithString,
 			fixed(str, val1 = '&', val2 = '='){
@@ -1377,6 +1377,26 @@
 					};
 				});
 				return obj;
+			}
+		});
+
+		// 对象解析成字符串
+		defineIt('unParseString', {
+			format: checkTargetNoEqualNull,
+			fixed(obj, val1 = '&', val2 = '='){
+				let list = [];
+				limit.each(obj, (val, key) => {
+					val = val.valueOf();
+					if( limit.isObject(val) ){
+						let str = JSON.stringify(val);
+						if(str){
+							list.push(`${key}${val2}${JSON.stringify(val)}`);
+						};
+					}else{
+						list.push(`${key}${val2}${val}`);
+					};
+				});
+				return list.join(val1);
 			}
 		});
 
@@ -1821,9 +1841,15 @@
 			if( json == null ){
 				json = '';
 			};
-			return stringify(json).replace(rex, function(a){
-				return new Function('return "'+a+'"')();
-			});
+			let str = stringify(json);
+			if( str ){
+				return str.replace(rex, function(a){
+					return new Function('return "'+a+'"')();
+				});
+			}else{
+				return '';
+			};
+			
 		};
 	})(JSON);
 
