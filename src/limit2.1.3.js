@@ -1334,8 +1334,12 @@
 				// 如果是对象的话，就出log
 				let objStr = '' + obj;
 				if( objStr === '[object Object]' ){
-					objStr = JSON.stringify(obj);
-					typeWarn.toString(obj, objStr);
+					try{
+						objStr = JSON.stringify(obj);
+						typeWarn.toString(obj, objStr);
+					}catch(e){
+						limit['!!!'](e);
+					};
 				};
 				return objStr;
 			}
@@ -1838,10 +1842,6 @@
 		},
 		toLog(){
 			limit['...']( this.getValue() );
-			return this;
-		},
-		toStringLog(){
-			limit['...']( JSON.stringify(this.getValue()) );
 			return this;
 		}
 	});

@@ -1755,8 +1755,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			// 如果是对象的话，就出log
 			var objStr = '' + obj;
 			if (objStr === '[object Object]') {
-				objStr = JSON.stringify(obj);
-				typeWarn.toString(obj, objStr);
+				try {
+					objStr = JSON.stringify(obj);
+					typeWarn.toString(obj, objStr);
+				} catch (e) {
+					limit['!!!'](e);
+				};
 			};
 			return objStr;
 		}
@@ -2325,10 +2329,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		},
 		toLog: function toLog() {
 			limit['...'](this.getValue());
-			return this;
-		},
-		toStringLog: function toStringLog() {
-			limit['...'](JSON.stringify(this.getValue()));
 			return this;
 		}
 	});
