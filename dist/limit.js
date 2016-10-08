@@ -1,7 +1,7 @@
 "use strict";
 /**
  * 2016.08.24
- * version: 2.1.0
+ * version: 2.1.4
  */
 
 "use strict";
@@ -172,7 +172,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	defineIt('F', { value: F });
 
 	// 版本
-	defineIt('V', { value: '2.1.0' });
+	defineIt('V', { value: '2.1.4' });
 
 	// 获取属性
 	defineIt('getProp', { value: getProp });
@@ -1446,7 +1446,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	});
 
 	// --函数-- //
-	var timeGuid = 0;
 	// Promise
 
 	var MyPromise = function () {

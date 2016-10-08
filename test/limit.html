@@ -26,7 +26,6 @@
 	function main1(){
 		return new Promise(function(resolve, reject){
 			setTimeout(function(){
-				console.log('success0');
 				resolve('success0');
 			}, 1000);
 		});
@@ -35,7 +34,6 @@
 	function main2(){
 		return new Promise(function(resolve, reject){
 			setTimeout(function(){
-				console.log('success1');
 				resolve('success1');
 			}, 1000);
 		});
@@ -44,8 +42,8 @@
 
 	main1().then(function(){
 		return main2();
-	}).then(function(){
-		console.log('over');
+	}).then(function(a){
+		console.log(a);
 	});
 
 })();

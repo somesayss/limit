@@ -1,7 +1,7 @@
 "use strict";
 /**
  * 2016.08.24
- * version: 2.1.0
+ * version: 2.1.4
  */
 
 "use strict";
@@ -103,7 +103,7 @@
 	defineIt('F', {value: F});
 
 	// 版本
-	defineIt('V', {value: '2.1.0'});
+	defineIt('V', {value: '2.1.4'});
 
 	// 获取属性
 	defineIt('getProp', {value: getProp});
@@ -1092,7 +1092,6 @@
 		});
 
 	// --函数-- //
-		let timeGuid = 0;
 		// Promise
 		class MyPromise {
 			constructor(...args){
