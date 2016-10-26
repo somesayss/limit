@@ -1679,6 +1679,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	};
 
 	// 创建原型
+	function C() {};
 	function classCreatePro(PRO) {
 		var create = Object.create;
 		//新的API
@@ -1689,8 +1690,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				__proto__: PRO
 			};
 		} else {
-			E.prototype = PRO;
-			return new E();
+			C.prototype = PRO;
+			return new C();
 		}
 	};
 

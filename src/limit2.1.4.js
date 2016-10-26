@@ -1288,6 +1288,7 @@
 		};
 
 		// 创建原型
+		function C(){};
 		function classCreatePro(PRO) {
 			let create = Object.create;
 			//新的API
@@ -1298,8 +1299,8 @@
 					__proto__: PRO
 				}
 			} else {
-				E.prototype = PRO;
-				return new E();
+				C.prototype = PRO;
+				return new C();
 			}
 		};
 
