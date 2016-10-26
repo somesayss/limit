@@ -12,6 +12,7 @@
 <script type="text/javascript" charset="utf-8" src="/dist/limit.js"></script>
 </head>
 <body>
+<div id="a"></div>
 <script type="text/javascript">
 "use strict";
 ;(function(){
@@ -21,30 +22,62 @@
 
 	limit.limitFixed = true;
 
-	var Promise = limit.promise();
-
-	function main1(){
-		return new Promise(function(resolve, reject){
-			setTimeout(function(){
-				resolve('success0');
-			}, 1000);
-		});
+	function classCreatePro(PRO) {
+		var E = function(){};
+		E.prototype = PRO;
+		return new E();
+		//新的API
+		// if (create) {
+		// 	return create(PRO);
+		// } else if (PRO.__proto__) {
+		// 	return {
+		// 		__proto__: PRO
+		// 	}
+		// } else {
+		// 	E.prototype = PRO;
+		// 	return new E();
+		// }
 	};
 
-	function main2(){
-		return new Promise(function(resolve, reject){
-			setTimeout(function(){
-				resolve('success1');
-			}, 1000);
-		});
+	function A(){
+		this.aa = 'aa';
 	};
 
+	A.prototype.className = 'A';
+	A.prototype.show = function(){
+		console.log(this);
+	};
 
-	main1().then(function(){
-		return main2();
-	}).then(function(a){
-		console.log(a);
-	});
+	function B(){
+		this.bb = 'bb';
+	};
+
+	B.prototype = classCreatePro(A.prototype);
+	B.prototype.constructor = B;
+	B.prototype.className = 'B';
+
+	function C(){
+
+	};
+
+	C.prototype = classCreatePro(B.prototype);
+	C.prototype.constructor = C;
+	C.prototype.className = 'C';
+
+
+	// 测试creatPro
+		function testCreatPro(PRO){
+			console.log( Object.create(PRO) );
+			console.log( {__proto__: PRO} );
+			var E = function(){};
+			E.prototype = PRO;
+			console.log( new E() );
+		};
+		// testCreatPro(A.prototype);
+
+	new C().show();
+
+
 
 })();
 </script>

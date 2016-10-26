@@ -1287,6 +1287,30 @@
 			WIN.Promise = MyPromise;
 		};
 
+		// 创建原型
+		function classCreatePro(PRO) {
+			let create = Object.create;
+			//新的API
+			if (create) {
+				return create(PRO);
+			} else if (PRO.__proto__) {
+				return {
+					__proto__: PRO
+				}
+			} else {
+				E.prototype = PRO;
+				return new E();
+			}
+		};
+
+		// 继承
+		function classExtend(SUB, PAR) {
+			//继承
+			SUB.prototype = classCreatePro(PAR.prototype);
+			//构造器
+			return SUB;
+		}
+
 		// mix: bind 对bind做了统一兼容处理
 		defineIt('bind', {
 			format: (fn, ...args) => [limit.cb(fn), ...args],
@@ -1297,8 +1321,13 @@
 			fixed(fn, ...args1){
 				// 兼容的方法
 				function main(...args2){
-					return Function.call.apply( fn, [...args1, ...args2] );
+					let me = this;
+					if( !(me instanceof main) ){
+						me = args1[0];
+					};
+					return Function.call.apply( fn, [me, ...args1, ...args2] );
 				};
+				classExtend(main, fn);
 				// 咋骗，可以让兼容方法伪装的更像
 				main.toString = () => 'function () { [native code] }';
 				return main;
