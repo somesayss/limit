@@ -1875,7 +1875,7 @@
 			this.__value__.pop();
 			return this;
 		},
-		getValue(){
+		val(){
 			return limit.last(this.__value__);
 		},
 		toLog(){

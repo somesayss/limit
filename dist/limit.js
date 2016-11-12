@@ -2363,7 +2363,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			this.__value__.pop();
 			return this;
 		},
-		getValue: function getValue() {
+		val: function val() {
 			return limit.last(this.__value__);
 		},
 		toLog: function toLog() {
