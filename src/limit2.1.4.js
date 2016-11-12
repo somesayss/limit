@@ -1353,6 +1353,10 @@
 		// mix: toString
 		defineIt('toString', {
 			value(obj){
+				// 如果没有入参就返回本身
+				if( !arguments.length ){
+					return 'function limit() { [native code] }';
+				};
 				// 如果是null或者undefined
 				if( obj == null ){
 					return '';
@@ -1378,6 +1382,10 @@
 		// mix: valueOf
 		defineIt('valueOf', {
 			value(obj){
+				// 如果没有入参就返回本身
+				if( !arguments.length ){
+					return limit;
+				};
 				if( obj == null ){
 					return obj;
 				};
@@ -1489,9 +1497,9 @@
 			// 防御如果在 0xFFFF 内的不转义
 			if( parseInt(str16, 16) <= 0xFFFF ) return [str16];
 			// 1.原始长度减去0x10000
-			var origin = parseInt(str16, 16) - 0x10000;
+			let origin = parseInt(str16, 16) - 0x10000;
 			// 获取高位和低位
-			var originH = origin >> 10,
+			let originH = origin >> 10,
 				originL = origin & 1023;
 			// 获取转义后的高低位
 			originH = (0xD800 | originH).toString(16).toUpperCase();

@@ -1775,6 +1775,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	// mix: toString
 	defineIt('toString', {
 		value: function value(obj) {
+			// 如果没有入参就返回本身
+			if (!arguments.length) {
+				return 'function limit() { [native code] }';
+			};
 			// 如果是null或者undefined
 			if (obj == null) {
 				return '';
@@ -1800,6 +1804,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	// mix: valueOf
 	defineIt('valueOf', {
 		value: function value(obj) {
+			// 如果没有入参就返回本身
+			if (!arguments.length) {
+				return limit;
+			};
 			if (obj == null) {
 				return obj;
 			};

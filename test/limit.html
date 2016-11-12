@@ -18,64 +18,9 @@
 ;(function(){
 
 	// begin
-	limit({a: '啊'}).toLog();
+	// limit({a: '啊'}).toLog();
 
 	limit.limitFixed = true;
-
-	function classCreatePro(PRO) {
-		var E = function(){};
-		E.prototype = PRO;
-		return new E();
-		//新的API
-		// if (create) {
-		// 	return create(PRO);
-		// } else if (PRO.__proto__) {
-		// 	return {
-		// 		__proto__: PRO
-		// 	}
-		// } else {
-		// 	E.prototype = PRO;
-		// 	return new E();
-		// }
-	};
-
-	function A(){
-		this.aa = 'aa';
-	};
-
-	A.prototype.className = 'A';
-	A.prototype.show = function(){
-		console.log(this);
-	};
-
-	function B(){
-		this.bb = 'bb';
-	};
-
-	B.prototype = classCreatePro(A.prototype);
-	B.prototype.constructor = B;
-	B.prototype.className = 'B';
-
-	function C(){
-
-	};
-
-	C.prototype = classCreatePro(B.prototype);
-	C.prototype.constructor = C;
-	C.prototype.className = 'C';
-
-
-	// 测试creatPro
-		function testCreatPro(PRO){
-			console.log( Object.create(PRO) );
-			console.log( {__proto__: PRO} );
-			var E = function(){};
-			E.prototype = PRO;
-			console.log( new E() );
-		};
-		// testCreatPro(A.prototype);
-
-	// new D().show();
 
 
 
