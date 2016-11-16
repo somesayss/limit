@@ -150,10 +150,10 @@
 					log('日志 ', args);
 				};
 			}
-		});
+		}); 
 
 		// 快捷方法
-		defineIt('T.T', {
+		defineIt('???', {
 			value: (...args) => limit.log(...['error', ...args])
 		});
 		defineIt('!!!', {
@@ -657,7 +657,7 @@
 							arr[index] = undefined;
 							return true;
 						}catch(e2){
-							limit['T.T'](e1, e2);
+							limit['???'](e1, e2);
 						};
 					};
 				};

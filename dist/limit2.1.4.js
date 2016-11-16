@@ -239,7 +239,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	});
 
 	// 快捷方法
-	defineIt('T.T', {
+	defineIt('???', {
 		value: function value() {
 			for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
 				args[_key3] = arguments[_key3];
@@ -945,7 +945,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 						arr[index] = undefined;
 						return true;
 					} catch (e2) {
-						limit['T.T'](e1, e2);
+						limit['???'](e1, e2);
 					};
 				};
 			};
