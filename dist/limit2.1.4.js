@@ -702,7 +702,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 	// mix: keysSuper
 	defineIt('keysSuper', {
-		value: function value(obj) {
+		format: checkTargetNoEqualNull,
+		fixed: function fixed(obj) {
 			if (getOwnPropertyNames) {
 				return getOwnPropertyNames(obj);
 			} else {

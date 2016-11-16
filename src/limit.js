@@ -458,7 +458,8 @@
 
 		// mix: keysSuper
 		defineIt('keysSuper', {
-			value(obj){
+			format: checkTargetNoEqualNull,
+			fixed(obj){
 				if(getOwnPropertyNames){
 					return getOwnPropertyNames(obj);
 				}else{
