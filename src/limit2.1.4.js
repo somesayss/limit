@@ -1879,7 +1879,7 @@
 			return limit.last(this.__value__);
 		},
 		toLog(){
-			limit['...']( this.getValue() );
+			limit['...']( this.val() );
 			return this;
 		}
 	});

@@ -2367,7 +2367,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			return limit.last(this.__value__);
 		},
 		toLog: function toLog() {
-			limit['...'](this.getValue());
+			limit['...'](this.val());
 			return this;
 		}
 	});

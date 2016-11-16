@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1"><!-- 手机头部设置 -->
 <meta name="description" content="" />
 <meta name="keywords" content=""  />
-<title>limitType.js</title>
+<title>Promise</title>
 <script type="text/javascript" charset="utf-8" src="/libs/es5.js"></script>
 <script type="text/javascript" charset="utf-8" src="/dist/limit.js"></script>
 </head>
@@ -16,42 +16,41 @@
 "use strict";
 ;(function(){
 
-	// 类型
-	var typeList = [
-		// 5种基础
-		'a1',
-		123,
-		true,
-		null,
-		undefined,
-		// 引用类型
-		new String('a1'),
-		new Number(123),
-		new Boolean(1),
-		{a: 'a1'},
-		[1,2,3],
-		function(){},
-		new Date(),
-		/a1/,
-		new Error('123'),
-		Math,
-		window,
-		document,
-		document.body,
-		document.body.childNodes
-	];
+	// begin
+	limit({a: '啊'}).toLog();
 
-	limit(typeList).each(function(val){
-		console.log( 
-			Object.prototype.toString.call(val), '|', 
-			''+val, '|', 
-			limit.toString(val), '|', 
-			limit.isObject( limit.valueOf(val) ) 
-			// Object.prototype.valueOf.call(val)
-		);
+	limit.limitFixed = true;
+
+	function Apromise(){
+		return new Promise((resolve, reject) => {
+			setTimeout(() => {
+				resolve('A');
+			}, 1000);
+		});
+	};
+
+	function Bpromise(){
+		return new Promise((resolve, reject) => {
+			setTimeout(() => {
+				resolve('B');
+			}, 1000);
+		});
+	};
+
+
+	Apromise().then((a) => {
+		limit['...'](a);
+		if(0){
+			return Bpromise();
+		}else{
+			return Promise.reject('C');
+		};
+	}).then((a) => {
+		limit['...'](a)
+	}).catch((e) => {
+		limit['T.T'](e)
 	});
-
-	// console.log( limit.toString(null) );
+	
 
 })();
 </script>
