@@ -1,10 +1,10 @@
 "use strict";
 /**
- * 2016.08.24
+ * 2016.11.24
  * version: 2.1.5
+ * 增加了日志缓存
  */
 
-"use strict";
 ;(function(WIN){
 	// 变量
 	function limit(val){
@@ -168,7 +168,7 @@
 		});
 		// 把警告和错误，缓存到本地
 		const cacheRegExp = /limitLog(\d+\.\d+)/;
-		const winLocalStorage = window.localStorage;
+		const winLocalStorage = WIN.localStorage;
 		// 清理缓存
 		const cacheClear = () => {
 			if( winLocalStorage ){
@@ -511,6 +511,19 @@
 			}
 		});
 
+		// mix: assignSuper
+		defineIt('assignLazy', {
+			format: checkTargetNoEqualNull,
+			fixed(target, ...args){
+				limit.each(args, val => {
+					limit.each(val, (val, key) => {
+						limit.isDefined(val) && limit.isUndefined(target[key]) && (target[key] = val);
+					});
+				});
+				return target;
+			}
+		});
+
 		// mix: extend
 		defineIt('extend', {
 			format: checkTargetNoEqualNull,
@@ -531,6 +544,19 @@
 				limit.each(args, val => {
 					limit.forin(val, (val, key) => {
 						limit.isDefined(val) && (target[key] = val);
+					});
+				});
+				return target;
+			}
+		});
+
+		// mix: extendLazy
+		defineIt('extendLazy', {
+			format: checkTargetNoEqualNull,
+			fixed(target, ...args){
+				limit.each(args, val => {
+					limit.forin(val, (val, key) => {
+						limit.isDefined(val) && limit.isUndefined(target[key]) && (target[key] = val);
 					});
 				});
 				return target;

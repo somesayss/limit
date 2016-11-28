@@ -1,10 +1,9 @@
 "use strict";
 /**
- * 2016.08.24
+ * 2016.11.24
  * version: 2.1.5
+ * 增加了日志缓存
  */
-
-"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -246,7 +245,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				args[_key3] = arguments[_key3];
 			}
 
-			cacheLog(["err[" + limit.formatDate() + "]"].concat(args)), limit.message.apply(limit, ['error'].concat(args));
+			cacheLog(['err[' + limit.formatDate() + ']'].concat(args)), limit.message.apply(limit, ['error'].concat(args));
 		}
 	});
 	defineIt('war', {
@@ -255,7 +254,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				args[_key4] = arguments[_key4];
 			}
 
-			cacheLog(["war[" + limit.formatDate() + "]"].concat(args)), limit.message.apply(limit, ['warn'].concat(args));
+			cacheLog(['war[' + limit.formatDate() + ']'].concat(args)), limit.message.apply(limit, ['warn'].concat(args));
 		}
 	});
 	defineIt('inf', {
@@ -264,7 +263,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				args[_key5] = arguments[_key5];
 			}
 
-			cacheLog(["inf[" + limit.formatDate() + "]"].concat(args)), limit.message.apply(limit, ['info'].concat(args));
+			cacheLog(['inf[' + limit.formatDate() + ']'].concat(args)), limit.message.apply(limit, ['info'].concat(args));
 		}
 	});
 	defineIt('log', {
@@ -278,7 +277,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	});
 	// 把警告和错误，缓存到本地
 	var cacheRegExp = /limitLog(\d+\.\d+)/;
-	var winLocalStorage = window.localStorage;
+	var winLocalStorage = WIN.localStorage;
 	// 清理缓存
 	var cacheClear = function cacheClear() {
 		if (winLocalStorage) {
@@ -286,7 +285,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				var time = limit.formatDate(new Date().getTime(), 'yyyyMMdd.HH');
 				// 清楚1天之前的信息
 				limit.forin(winLocalStorage, function (val, key) {
-					if (cacheRegExp.test(key) && limit['?'](time + " - " + RegExp.$1) > 1) {
+					if (cacheRegExp.test(key) && limit['?'](time + ' - ' + RegExp.$1) > 1) {
 						localStorage.removeItem(key);
 					};
 				});
@@ -298,10 +297,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		if (winLocalStorage) {
 			// 获取当前的时间
 			var time = limit.formatDate(new Date().getTime(), 'yyyyMMdd.HH');
-			var cacheId = "limitLog" + time;
+			var cacheId = 'limitLog' + time;
 			var oldLog = winLocalStorage.getItem(cacheId) || '';
 			// 缓存信息
-			winLocalStorage.setItem(cacheId, "" + oldLog + args + "\n");
+			winLocalStorage.setItem(cacheId, '' + oldLog + args + '\n');
 		};
 	};
 
@@ -356,7 +355,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 	// 是否是对象 除了5种基本类型以外都是对象
 	defineIt('isObject', { value: function value(n) {
-			return limit.isFunction(n) || (typeof n === "undefined" ? "undefined" : _typeof(n)) === 'object' && !!n;
+			return limit.isFunction(n) || (typeof n === 'undefined' ? 'undefined' : _typeof(n)) === 'object' && !!n;
 		} });
 
 	defineIt('isObjectSuper', { value: function value(n) {
@@ -767,12 +766,29 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		}
 	});
 
-	// mix: extend
-	defineIt('extend', {
+	// mix: assignSuper
+	defineIt('assignLazy', {
 		format: checkTargetNoEqualNull,
 		fixed: function fixed(target) {
 			for (var _len17 = arguments.length, args = Array(_len17 > 1 ? _len17 - 1 : 0), _key17 = 1; _key17 < _len17; _key17++) {
 				args[_key17 - 1] = arguments[_key17];
+			}
+
+			limit.each(args, function (val) {
+				limit.each(val, function (val, key) {
+					limit.isDefined(val) && limit.isUndefined(target[key]) && (target[key] = val);
+				});
+			});
+			return target;
+		}
+	});
+
+	// mix: extend
+	defineIt('extend', {
+		format: checkTargetNoEqualNull,
+		fixed: function fixed(target) {
+			for (var _len18 = arguments.length, args = Array(_len18 > 1 ? _len18 - 1 : 0), _key18 = 1; _key18 < _len18; _key18++) {
+				args[_key18 - 1] = arguments[_key18];
 			}
 
 			limit.each(args, function (val) {
@@ -788,8 +804,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	defineIt('extendSuper', {
 		format: checkTargetNoEqualNull,
 		fixed: function fixed(target) {
-			for (var _len18 = arguments.length, args = Array(_len18 > 1 ? _len18 - 1 : 0), _key18 = 1; _key18 < _len18; _key18++) {
-				args[_key18 - 1] = arguments[_key18];
+			for (var _len19 = arguments.length, args = Array(_len19 > 1 ? _len19 - 1 : 0), _key19 = 1; _key19 < _len19; _key19++) {
+				args[_key19 - 1] = arguments[_key19];
 			}
 
 			limit.each(args, function (val) {
@@ -801,12 +817,29 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		}
 	});
 
+	// mix: extendLazy
+	defineIt('extendLazy', {
+		format: checkTargetNoEqualNull,
+		fixed: function fixed(target) {
+			for (var _len20 = arguments.length, args = Array(_len20 > 1 ? _len20 - 1 : 0), _key20 = 1; _key20 < _len20; _key20++) {
+				args[_key20 - 1] = arguments[_key20];
+			}
+
+			limit.each(args, function (val) {
+				limit.forin(val, function (val, key) {
+					limit.isDefined(val) && limit.isUndefined(target[key]) && (target[key] = val);
+				});
+			});
+			return target;
+		}
+	});
+
 	// mix: getValueInObject
 	defineIt('getValueInObject', {
 		format: checkTargetNoEqualNull,
 		fixed: function fixed(obj) {
-			for (var _len19 = arguments.length, args = Array(_len19 > 1 ? _len19 - 1 : 0), _key19 = 1; _key19 < _len19; _key19++) {
-				args[_key19 - 1] = arguments[_key19];
+			for (var _len21 = arguments.length, args = Array(_len21 > 1 ? _len21 - 1 : 0), _key21 = 1; _key21 < _len21; _key21++) {
+				args[_key21 - 1] = arguments[_key21];
 			}
 
 			limit.some(args, function (val) {
@@ -832,8 +865,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	defineIt('stack', {
 		format: checkTargetNoEqualNull,
 		fixed: function fixed(obj) {
-			for (var _len20 = arguments.length, args = Array(_len20 > 1 ? _len20 - 1 : 0), _key20 = 1; _key20 < _len20; _key20++) {
-				args[_key20 - 1] = arguments[_key20];
+			for (var _len22 = arguments.length, args = Array(_len22 > 1 ? _len22 - 1 : 0), _key22 = 1; _key22 < _len22; _key22++) {
+				args[_key22 - 1] = arguments[_key22];
 			}
 
 			limit.each(args, function (val1) {
@@ -892,8 +925,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		value: function value() {
 			var value = [];
 
-			for (var _len21 = arguments.length, args = Array(_len21), _key21 = 0; _key21 < _len21; _key21++) {
-				args[_key21] = arguments[_key21];
+			for (var _len23 = arguments.length, args = Array(_len23), _key23 = 0; _key23 < _len23; _key23++) {
+				args[_key23] = arguments[_key23];
 			}
 
 			limit.forEach(args, function (val) {
@@ -927,8 +960,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	defineIt('whiteList', {
 		format: checkTargetWithArray,
 		fixed: function fixed(arr) {
-			for (var _len22 = arguments.length, args = Array(_len22 > 1 ? _len22 - 1 : 0), _key22 = 1; _key22 < _len22; _key22++) {
-				args[_key22 - 1] = arguments[_key22];
+			for (var _len24 = arguments.length, args = Array(_len24 > 1 ? _len24 - 1 : 0), _key24 = 1; _key24 < _len24; _key24++) {
+				args[_key24 - 1] = arguments[_key24];
 			}
 
 			args = limit.flatten(args);
@@ -941,8 +974,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	defineIt('blackList', {
 		format: checkTargetWithArray,
 		fixed: function fixed(arr) {
-			for (var _len23 = arguments.length, args = Array(_len23 > 1 ? _len23 - 1 : 0), _key23 = 1; _key23 < _len23; _key23++) {
-				args[_key23 - 1] = arguments[_key23];
+			for (var _len25 = arguments.length, args = Array(_len25 > 1 ? _len25 - 1 : 0), _key25 = 1; _key25 < _len25; _key25++) {
+				args[_key25 - 1] = arguments[_key25];
 			}
 
 			args = limit.flatten(args);
@@ -955,8 +988,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	// mix: difference [支持obj]
 	defineIt('difference', {
 		value: function value(arr) {
-			for (var _len24 = arguments.length, args = Array(_len24 > 1 ? _len24 - 1 : 0), _key24 = 1; _key24 < _len24; _key24++) {
-				args[_key24 - 1] = arguments[_key24];
+			for (var _len26 = arguments.length, args = Array(_len26 > 1 ? _len26 - 1 : 0), _key26 = 1; _key26 < _len26; _key26++) {
+				args[_key26 - 1] = arguments[_key26];
 			}
 
 			args = limit.flatten(args);
@@ -1312,8 +1345,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			return Function.call.apply(reduceRight, arguments);
 		},
 		fixed: function fixed() {
-			for (var _len25 = arguments.length, args = Array(_len25), _key25 = 0; _key25 < _len25; _key25++) {
-				args[_key25] = arguments[_key25];
+			for (var _len27 = arguments.length, args = Array(_len27), _key27 = 0; _key27 < _len27; _key27++) {
+				args[_key27] = arguments[_key27];
 			}
 
 			var len = args[0].length - 1,
@@ -1357,8 +1390,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			return of.apply(undefined, arguments);
 		},
 		fixed: function fixed() {
-			for (var _len26 = arguments.length, args = Array(_len26), _key26 = 0; _key26 < _len26; _key26++) {
-				args[_key26] = arguments[_key26];
+			for (var _len28 = arguments.length, args = Array(_len28), _key28 = 0; _key28 < _len28; _key28++) {
+				args[_key28] = arguments[_key28];
 			}
 
 			return slice.call(args);
@@ -1538,7 +1571,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		}
 
 		_createClass(MyPromise, [{
-			key: "then",
+			key: 'then',
 			value: function then(suc, err) {
 				var me = this;
 				if (me.promiseList) {
@@ -1553,7 +1586,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				return me;
 			}
 		}, {
-			key: "errorBack",
+			key: 'errorBack',
 			value: function errorBack() {
 				var me = this;
 				// 如果没有
@@ -1566,7 +1599,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				};
 			}
 		}, {
-			key: "successBack",
+			key: 'successBack',
 			value: function successBack() {
 				var me = this,
 				    PromiseValue = me.PromiseValue;
@@ -1586,7 +1619,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				};
 			}
 		}, {
-			key: "cleanStack",
+			key: 'cleanStack',
 			value: function cleanStack() {
 				var me = this,
 				    one = me.Stack.shift();
@@ -1623,7 +1656,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				};
 			}
 		}], [{
-			key: "all",
+			key: 'all',
 			value: function all(list) {
 				var guid = list.length,
 				    back = void 0,
@@ -1651,7 +1684,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				});
 			}
 		}, {
-			key: "race",
+			key: 'race',
 			value: function race(list) {
 				return new MyPromise(function (resolve, reject) {
 					limit.each(list, function (val) {
@@ -1664,7 +1697,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				});
 			}
 		}, {
-			key: "resolve",
+			key: 'resolve',
 			value: function resolve(val) {
 				if (val && val.then) {
 					return new MyPromise(function (resolve, reject) {
@@ -1676,7 +1709,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				});
 			}
 		}, {
-			key: "reject",
+			key: 'reject',
 			value: function reject(val) {
 				return new MyPromise(function (resolve, reject) {
 					reject(val);
@@ -1745,8 +1778,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	// mix: bind 对bind做了统一兼容处理
 	defineIt('bind', {
 		format: function format(fn) {
-			for (var _len27 = arguments.length, args = Array(_len27 > 1 ? _len27 - 1 : 0), _key27 = 1; _key27 < _len27; _key27++) {
-				args[_key27 - 1] = arguments[_key27];
+			for (var _len29 = arguments.length, args = Array(_len29 > 1 ? _len29 - 1 : 0), _key29 = 1; _key29 < _len29; _key29++) {
+				args[_key29 - 1] = arguments[_key29];
 			}
 
 			return [limit.cb(fn)].concat(args);
@@ -1755,15 +1788,15 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			return bind && fn.bind === bind;
 		},
 		priority: function priority() {
-			for (var _len28 = arguments.length, args1 = Array(_len28), _key28 = 0; _key28 < _len28; _key28++) {
-				args1[_key28] = arguments[_key28];
+			for (var _len30 = arguments.length, args1 = Array(_len30), _key30 = 0; _key30 < _len30; _key30++) {
+				args1[_key30] = arguments[_key30];
 			}
 
 			return Function.call.apply(bind, [].concat(args1));
 		},
 		fixed: function fixed(fn) {
-			for (var _len29 = arguments.length, args1 = Array(_len29 > 1 ? _len29 - 1 : 0), _key29 = 1; _key29 < _len29; _key29++) {
-				args1[_key29 - 1] = arguments[_key29];
+			for (var _len31 = arguments.length, args1 = Array(_len31 > 1 ? _len31 - 1 : 0), _key31 = 1; _key31 < _len31; _key31++) {
+				args1[_key31 - 1] = arguments[_key31];
 			}
 
 			// 兼容的方法
@@ -1773,8 +1806,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 					me = args1[0];
 				};
 
-				for (var _len30 = arguments.length, args2 = Array(_len30), _key30 = 0; _key30 < _len30; _key30++) {
-					args2[_key30] = arguments[_key30];
+				for (var _len32 = arguments.length, args2 = Array(_len32), _key32 = 0; _key32 < _len32; _key32++) {
+					args2[_key32] = arguments[_key32];
 				}
 
 				return Function.call.apply(fn, [me].concat(args1, args2));
@@ -1791,13 +1824,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	// mix: compose 组合 a(b(c())) => (a(), b(), c());
 	defineIt('compose', {
 		value: function value() {
-			for (var _len31 = arguments.length, args1 = Array(_len31), _key31 = 0; _key31 < _len31; _key31++) {
-				args1[_key31] = arguments[_key31];
+			for (var _len33 = arguments.length, args1 = Array(_len33), _key33 = 0; _key33 < _len33; _key33++) {
+				args1[_key33] = arguments[_key33];
 			}
 
 			return function () {
-				for (var _len32 = arguments.length, args2 = Array(_len32), _key32 = 0; _key32 < _len32; _key32++) {
-					args2[_key32] = arguments[_key32];
+				for (var _len34 = arguments.length, args2 = Array(_len34), _key34 = 0; _key34 < _len34; _key34++) {
+					args2[_key34] = arguments[_key34];
 				}
 
 				var result = args2;
@@ -1911,12 +1944,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				if (limit.isObject(val)) {
 					try {
 						var str = JSON.stringify(val);
-						str && list.push("" + key + val2 + str);
+						str && list.push('' + key + val2 + str);
 					} catch (e) {
-						list.push("" + key + val2 + val);
+						list.push('' + key + val2 + val);
 					};
 				} else {
-					list.push("" + key + val2 + val);
+					list.push('' + key + val2 + val);
 				};
 			});
 			return list.join(val1);
@@ -1992,12 +2025,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				throw new RangeError('Invalid code point NaN');
 			};
 			if (code < 0 || code > 0x10FFFF) {
-				throw new RangeError("Invalid code point " + code);
+				throw new RangeError('Invalid code point ' + code);
 			};
 			code = limit.map(parseUnicode(code.toString(16)), function (val) {
-				return "\\u" + limit.padStart(val, 4, '0');
+				return '\\u' + limit.padStart(val, 4, '0');
 			}).join('');
-			return new Function("return \"" + code + "\"")();
+			return new Function('return "' + code + '"')();
 		}
 	});
 
@@ -2221,8 +2254,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 	// 获取最大的小数位
 	var getMaxScale = function getMaxScale() {
-		for (var _len33 = arguments.length, args = Array(_len33), _key33 = 0; _key33 < _len33; _key33++) {
-			args[_key33] = arguments[_key33];
+		for (var _len35 = arguments.length, args = Array(_len35), _key35 = 0; _key35 < _len35; _key35++) {
+			args[_key35] = arguments[_key35];
 		}
 
 		if (!checkFiniteNum(args)) {
@@ -2237,8 +2270,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	defineIt('plus,+', {
 		format: checkFlattenArgs,
 		fixed: function fixed() {
-			for (var _len34 = arguments.length, args = Array(_len34), _key34 = 0; _key34 < _len34; _key34++) {
-				args[_key34] = arguments[_key34];
+			for (var _len36 = arguments.length, args = Array(_len36), _key36 = 0; _key36 < _len36; _key36++) {
+				args[_key36] = arguments[_key36];
 			}
 
 			var maxScale = getMaxScale.apply(undefined, args);
@@ -2255,8 +2288,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	defineIt('minus,-', {
 		format: checkFlattenArgs,
 		fixed: function fixed() {
-			for (var _len35 = arguments.length, args = Array(_len35), _key35 = 0; _key35 < _len35; _key35++) {
-				args[_key35] = arguments[_key35];
+			for (var _len37 = arguments.length, args = Array(_len37), _key37 = 0; _key37 < _len37; _key37++) {
+				args[_key37] = arguments[_key37];
 			}
 
 			var maxScale = getMaxScale.apply(undefined, args);
@@ -2284,8 +2317,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	defineIt('multiply,*', {
 		format: checkFlattenArgs,
 		fixed: function fixed() {
-			for (var _len36 = arguments.length, args = Array(_len36), _key36 = 0; _key36 < _len36; _key36++) {
-				args[_key36] = arguments[_key36];
+			for (var _len38 = arguments.length, args = Array(_len38), _key38 = 0; _key38 < _len38; _key38++) {
+				args[_key38] = arguments[_key38];
 			}
 
 			if (!checkFiniteNum(args)) {
@@ -2301,8 +2334,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	defineIt('except,/', {
 		format: checkFlattenArgs,
 		fixed: function fixed() {
-			for (var _len37 = arguments.length, args = Array(_len37), _key37 = 0; _key37 < _len37; _key37++) {
-				args[_key37] = arguments[_key37];
+			for (var _len39 = arguments.length, args = Array(_len39), _key39 = 0; _key39 < _len39; _key39++) {
+				args[_key39] = arguments[_key39];
 			}
 
 			if (!checkFiniteNum(args)) {
@@ -2357,8 +2390,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			};
 			// 正常入参
 			return formatStr.replace(REG_EXP_DATA, function () {
-				for (var _len38 = arguments.length, args = Array(_len38), _key38 = 0; _key38 < _len38; _key38++) {
-					args[_key38] = arguments[_key38];
+				for (var _len40 = arguments.length, args = Array(_len40), _key40 = 0; _key40 < _len40; _key40++) {
+					args[_key40] = arguments[_key40];
 				}
 
 				var arr = [];
@@ -2386,8 +2419,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	limit.each(limit, function (val, key) {
 		if (limit.isFunction(val)) {
 			limit.prototype[key] = function () {
-				for (var _len39 = arguments.length, args = Array(_len39), _key39 = 0; _key39 < _len39; _key39++) {
-					args[_key39] = arguments[_key39];
+				for (var _len41 = arguments.length, args = Array(_len41), _key41 = 0; _key41 < _len41; _key41++) {
+					args[_key41] = arguments[_key41];
 				}
 
 				this.__value__.push(limit[key].apply(limit, [limit.last(this.__value__)].concat(args)));
