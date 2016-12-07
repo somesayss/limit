@@ -4,6 +4,7 @@
  * version: 2.1.6
  * 增加了日志缓存
  * 增加了 limit.parseInt 替换 ~~ 操作符
+ * 支持 node.js
  */
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -2182,7 +2183,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			if (!obj) {
 				obj = 0;
 			};
-			return parseInt(obj);
+			return parseInt(obj, 10);
 		}
 	});
 
@@ -2492,4 +2493,4 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	})(JSON);
 
 	cacheClear();
-})(window);
+})(typeof window === 'undefined' ? global : window);

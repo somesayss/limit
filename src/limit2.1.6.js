@@ -4,6 +4,7 @@
  * version: 2.1.6
  * 增加了日志缓存
  * 增加了 limit.parseInt 替换 ~~ 操作符
+ * 支持 node.js
  */
 
 ;(function(WIN){
@@ -1710,7 +1711,7 @@
 				if( !obj ){
 					obj = 0;
 				};
-				return parseInt(obj);
+				return parseInt(obj, 10);
 			}
 		});
 
@@ -1986,4 +1987,9 @@
 
 	cacheClear();
 
-})(window);
+})(typeof window === 'undefined' ? global : window);
+
+
+
+
+
