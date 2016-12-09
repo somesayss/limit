@@ -847,7 +847,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			limit.some(args, function (val) {
 				try {
 					obj = obj[val];
-					return !limit.isObject(limit.valueOf(obj));
 				} catch (e) {
 					return obj = undefined, true;
 				};

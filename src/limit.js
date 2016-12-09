@@ -572,7 +572,6 @@
 				limit.some(args, val => {
 					try{
 						obj = obj[val];
-						return !limit.isObject( limit.valueOf(obj) );
 					}catch(e){
 						return obj = undefined, true;
 					};
