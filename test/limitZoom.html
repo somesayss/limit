@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1"><!-- 手机头部设置 -->
 <meta name="description" content="" />
 <meta name="keywords" content=""  />
-<title>limit.js</title>
+<title>limitZoom.js</title>
 <script type="text/javascript" charset="utf-8" src="/libs/es5.js"></script>
 <script type="text/javascript" charset="utf-8" src="/dist/limit.js"></script>
 </head>
@@ -16,7 +16,29 @@
 "use strict";
 ;(function(){
 
-	console.log(123);
+	function isDefaultZoom(){
+		var WIN = window;
+		// 通过浏览器属性[window.devicePixelRatio]
+		if( WIN.devicePixelRatio && WIN.devicePixelRatio === 1 ){
+			return true;
+		};
+		// 通过计算宽度比
+		var IW = WIN.innerWidth;
+		var OW = WIN.outerWidth;
+		if( IW && OW && IW/OW === 1 ){
+			return true;
+		};
+		// IE下通过特殊API获取
+		var screen = WIN.screen;
+		var DX = screen.deviceXDPI;
+		var LX = screen.logicalXDPI;
+		if( DX && LX && DX/LX === 1 ){
+			return true;
+		};
+		return false;
+	};
+	
+	console.log(getZoom());
 
 })();
 </script>

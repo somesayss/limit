@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1"><!-- 手机头部设置 -->
 <meta name="description" content="" />
 <meta name="keywords" content=""  />
-<title>limit.js</title>
+<title>limitMap</title>
 <script type="text/javascript" charset="utf-8" src="/libs/es5.js"></script>
 <script type="text/javascript" charset="utf-8" src="/dist/limit.js"></script>
 </head>
@@ -16,7 +16,44 @@
 "use strict";
 ;(function(){
 
-	console.log(123);
+	limit.limitFixed = true;
+
+	var Map = limit.Map();
+
+	var M = new Map();
+
+	M.set(undefined, null);
+
+	M.set('a', 'a');
+
+	M.set(new Number('1'), '1');
+
+	M.set(new Number('1'), '2');
+
+	// M.forEach(function(val, key){
+	// 	console.log(val, key, this);
+	// }, 'a1');
+
+	
+
+	M.set(undefined, 'aaa')
+
+	var a = M['delete']('a');
+
+	// console.log(a);
+
+	limit.log( M.keys() );
+
+
+	// var o = {};
+
+	// o[{}] = '123';
+
+	// console.log(o);
+
+	// var arr = ['a', 'a', 'bb', 1, 1, undefined, undefined, NaN, NaN];
+
+	// console.log( limit.union(arr) );
 
 })();
 </script>

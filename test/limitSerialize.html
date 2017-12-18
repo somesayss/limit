@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1"><!-- 手机头部设置 -->
 <meta name="description" content="" />
 <meta name="keywords" content=""  />
-<title>limit.js</title>
+<title>limitSerialize.js</title>
 <script type="text/javascript" charset="utf-8" src="/libs/es5.js"></script>
 <script type="text/javascript" charset="utf-8" src="/dist/limit.js"></script>
 </head>
@@ -16,7 +16,23 @@
 "use strict";
 ;(function(){
 
-	console.log(123);
+	var obj = {};
+	var GUID = 0;
+	obj['a'] = 'a1';
+	obj['b.a'] = 'a11';
+	obj['b.b'] = 'a12';
+	// obj['c.b.a'] = 'a3'; //=> c: {'b.a': 'a3'}
+	// obj['d.c.b.a'] = 'a4'; //=> c: {'b.a': 'a3'}
+	// obj['d.c.b.b'] = 'a5'; //=> c: {'b.a': 'a3'}
+	obj['c[0]a'] = 'a3';
+	obj['c[1]a'] = 'a3';
+	// obj['d[0]c[0]b.a'] = 'a3';
+	obj['d.c[0]b[0]a'] = 'a3';
+	obj['d.c[1]b[0]a'] = 'a3';
+	obj['d.c[2]b[6]a'] = 'a3';
+
+	console.log( obj );
+	console.log( limit.serialize( limit.extend({}, obj) ) );
 
 })();
 </script>

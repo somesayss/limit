@@ -12,7 +12,6 @@
  * bind兼容方法的BUG修改
  * 增加了字符串驼峰话方法
  * 增加已时间为Key的唯一ID
- * Eventdestroy的时候的问题[me.state={}]
  */
 
 ;(function(WIN){
@@ -114,7 +113,7 @@
 	defineIt('F', {value: F});
 
 	// 版本
-	defineIt('V', {value: '2.2.2'});
+	defineIt('V', {value: '2.2.0'});
 
 	// 获取属性
 	defineIt('getProp', {value: getProp});
@@ -356,8 +355,8 @@
 		const UID = [0, 0, 0];
 		defineIt('getUid', {
 			value(){
-				let index = UID.length;
-				let	code;
+				let index = UID.length,
+					code;
 				while(index--){
 					code = UID[index];
 					if(code === 9){
@@ -373,17 +372,8 @@
 			}
 		});
 
-		let uidCatchTime = null;
-		let uidCatchId = null;
 		defineIt('getTimeUid', {
-			value(){
-				let time = new Date().getTime();
-				if( time !== uidCatchTime ){
-					uidCatchTime = time;
-					uidCatchId = 0;
-				};
-				return [uidCatchTime, limit.padStart(++uidCatchId, 3, '0')].join('');
-			}
+			value: () => new Date().getTime() + limit.getUid().split('.').join('')
 		});
 
 		// 私有遍历
@@ -1557,7 +1547,6 @@
 			on(eventName, listener){
 				let me = this;
 				let {state} = me;
-				if( !state || !state.listeners ) return me;
 				let listeners = state.listeners;
 				if( listeners[eventName] ){
 					listeners[eventName].push(limit.cb(listener));
@@ -1570,7 +1559,6 @@
 			once(eventName, listener){
 				let me = this;
 				let {state} = me;
-				if( !state || !state.listeners ) return me;
 				let listeners = state.listeners;
 				let newListener = function(...args){
 					me::(limit.cb(listener))(...args);
@@ -1587,7 +1575,6 @@
 			emit(eventName, ...args){
 				let me = this;
 				let {state} = me;
-				if( !state || !state.listeners ) return me;
 				let listeners = state.listeners;
 				if( listeners[eventName] ){
 					limit.each(listeners[eventName], (val) => {
@@ -1599,7 +1586,6 @@
 			removeListener(eventName, listener){
 				let me = this;
 				let {state} = me;
-				if( !state || !state.listeners ) return me;
 				let listeners = state.listeners;
 				if(	listeners[eventName] ){
 					limit.remove(listeners[eventName], listener);
@@ -1609,7 +1595,6 @@
 			removeAllListeners(eventName){
 				let me = this;
 				let {state} = me;
-				if( !state || !state.listeners ) return me;
 				let listeners = state.listeners;
 				if( listeners[eventName] ){
 					delete listeners[eventName];
@@ -1621,13 +1606,11 @@
 			getMaxListeners(){
 				let me = this;
 				let {state} = me;
-				if( !state ) return;
 				return state.maxListeners;
 			}
 			setMaxListeners(n){
 				let me = this;
 				let {state} = me;
-				if( !state ) return me;
 				state.maxListeners = limit.parseInt(n);
 				return me;
 			}
@@ -1635,7 +1618,6 @@
 				let me = this;
 				delete me.state;
 				delete me.props;
-				return me;
 			}
 		};
 
@@ -2262,11 +2244,11 @@
 	// 对IE下 JSON.stringify 的修复
 	;(function(JSON){
 		let rex = /(\\u\w{4})/g;
-		JSON.stringify = function(json, replacer, space){
+		JSON.stringify = function(json){
 			if( json == null ){
 				json = '';
 			};
-			let str = stringify(json, replacer, space);
+			let str = stringify(json);
 			if( str ){
 				return str.replace(rex, function(a){
 					return new Function('return "'+a+'"')();

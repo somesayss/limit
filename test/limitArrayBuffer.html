@@ -16,7 +16,23 @@
 "use strict";
 ;(function(){
 
-	console.log(123);
+	// Uint8Array 无符号8位 [0~255]
+
+	var buf = new ArrayBuffer(3);
+
+	var a = new Uint8Array(3);
+	var b = new Uint8Array([0,1,257]);
+	var c = new Uint8Array(buf);
+
+	a[3] = 3;
+	b[3] = 3;
+	c[3] = 1;
+	c[4] = 2;
+
+	console.log(buf);
+	console.log(a);
+	console.log(b);
+	console.log(c);
 
 })();
 </script>

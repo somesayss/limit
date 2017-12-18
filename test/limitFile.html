@@ -7,16 +7,35 @@
 <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1"><!-- 手机头部设置 -->
 <meta name="description" content="" />
 <meta name="keywords" content=""  />
-<title>limit.js</title>
+<title>limitFile.js</title>
 <script type="text/javascript" charset="utf-8" src="/libs/es5.js"></script>
 <script type="text/javascript" charset="utf-8" src="/dist/limit.js"></script>
 </head>
 <body>
+
+<input type="file" id="fileInput" />
+
 <script type="text/javascript">
 "use strict";
 ;(function(){
 
-	console.log(123);
+	var fileInput = document.getElementById('fileInput');
+
+	fileInput.onchange = function(){
+		var file = fileInput.files[0];
+		var reader = new FileReader();
+		reader.onload = function(){
+			console.log(new Uint8Array(this.result));
+			// console.log( this.result.split('').map((val) => {
+				// return val.charCodeAt(0);
+			// }));
+		};
+		// reader.readAsBinaryString(file);
+		reader.readAsArrayBuffer(file);
+		// reader.readAsText(file);
+		// 
+		// 97, 229, 149, 138
+	};
 
 })();
 </script>

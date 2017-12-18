@@ -2848,11 +2848,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	// 对IE下 JSON.stringify 的修复
 	;(function (JSON) {
 		var rex = /(\\u\w{4})/g;
-		JSON.stringify = function (json, replacer, space) {
+		JSON.stringify = function (json) {
 			if (json == null) {
 				json = '';
 			};
-			var str = stringify(json, replacer, space);
+			var str = stringify(json);
 			if (str) {
 				return str.replace(rex, function (a) {
 					return new Function('return "' + a + '"')();

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="renderer" content="webkit"><!-- 360浏览器切换内核 webkit | ie-comp[IE6/7]? | ie-stand[IE8910]? -->
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1"><!-- 手机头部设置 -->
+<meta name="description" content="" />
+<meta name="keywords" content=""  />
+<title>limitRange.js</title>
+<script type="text/javascript" charset="utf-8" src="/libs/es5.js"></script>
+<script type="text/javascript" charset="utf-8" src="/dist/limit.js"></script>
+</head>
+<body>
+<input type="text" id="text" /><br />
+<textarea name="" id="textarea" cols="30" rows="10"></textarea>
+<input type="button" value="点击" id="button" />
+
+<script type="text/javascript">
+"use strict";
+;(function(){
+
+	var text = document.getElementById('text');
+	var textarea = document.getElementById('textarea');
+	var button = document.getElementById('button');
+
+	button.onclick = function(){
+		// var selection = window.getSelection();
+		// selection.collapse(textarea, 1);
+		// textarea.focus();
+		// textarea.selectionStart = 1;
+		// textarea.selectionEnd = 2;
+		// textarea.setSelectionRange(textarea.value.length - 1, textarea.value.length - 1);
+
+		textSelect(text, text.value.length-1, text.value.length-1);
+
+	};
+
+	function textSelect(input, start, end){
+		if( input.setSelectionRange ){
+			input.setSelectionRange(start, end);
+			input.focus();
+		}else{
+			var range = input.createTextRange();         
+			range.moveStart("character", start);
+			range.moveEnd("character",end);
+			if( start === end ){
+				range.collapse(true);
+			};
+			range.select();
+		};
+	};
+
+})();
+</script>
+</body>
+</html>

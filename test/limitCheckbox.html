@@ -10,8 +10,31 @@
 <title>limit.js</title>
 <script type="text/javascript" charset="utf-8" src="/libs/es5.js"></script>
 <script type="text/javascript" charset="utf-8" src="/dist/limit.js"></script>
+<style>
+input[type="checkbox"]{
+
+}
+input[type="checkbox"]:checked+i{
+	display:inline-block;
+	width:100px;
+	height:100px;
+	background:#F00;
+}
+input[type="checkbox"]:before{
+	/*content:'';
+	display:inline-block;
+	width:100px;
+	height:100px;
+	background:#F00;*/
+}
+</style>
 </head>
 <body>
+<div style="background:#F00">
+	<input type="checkbox" />
+	<i></i>
+</div>
+
 <script type="text/javascript">
 "use strict";
 ;(function(){

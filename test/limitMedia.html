@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="Author" contect="GabrielChen">
+    <meta name="keywords" contect="Web Audio API">
+    <title>Web Audio API 学习</title>
+    <script>
+        var canvas;
+        var ctx;
+        var audioContext;
+        var analyser;
+        var mic;
+ 
+        function init() {
+            canvasOne = document.getElementById('canvasOne');
+            ctx = canvasOne.getContext("2d");
+        }
+       
+        navigator.getMedia = ( navigator.getUserMedia ||
+                navigator.webkitGetUserMedia ||
+                navigator.mozGetUserMedia ||
+                navigator.msGetUserMedia);
+ 
+        navigator.getMedia ( { audio: true }, function (stream) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext);
+             
+            mic = audioContext.createMediaStreamSource(stream);
+            
+            analyser= audioContext.createAnalyser();
+            
+            analyser.fftSize = 128;
+
+            console.log(analyser.frequencyBinCount);
+
+            mic.connect(analyser);
+            drawSpectrum();
+        },function(){});
+ 
+        function drawSpectrum() {
+            var WIDTH = canvasOne.width;
+            var HEIGHT= canvasOne.height;
+            var array =  new Uint8Array(128);
+            analyser.getByteFrequencyData(array);
+            ctx.clearRect(0, 0, WIDTH, HEIGHT);
+            for ( var i = 0; i < (array.length); i++ ){
+                var value = array[i];
+                ctx.fillRect(i*5,HEIGHT-value,3,HEIGHT);
+            }
+            requestAnimationFrame(drawSpectrum);
+        };
+ 
+    </script>
+    <style>
+        #canvasOne {
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body onload="init();">
+<h1>频域图模仿</h1>
+<canvas id="canvasOne" width="640"></canvas>
+</body>
+</html>

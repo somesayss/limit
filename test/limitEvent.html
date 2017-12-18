@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1"><!-- 手机头部设置 -->
 <meta name="description" content="" />
 <meta name="keywords" content=""  />
-<title>limit.js</title>
+<title>limitEvent.js</title>
 <script type="text/javascript" charset="utf-8" src="/libs/es5.js"></script>
 <script type="text/javascript" charset="utf-8" src="/dist/limit.js"></script>
 </head>
@@ -16,7 +16,47 @@
 "use strict";
 ;(function(){
 
-	console.log(123);
+	var Emit = new limit.Events();
+
+	function main(){
+		console.log('123', this, arguments);
+	}
+
+	Emit.on('a', main);
+	Emit.on('a', main);
+	Emit.on('a', main);
+	Emit.on('a', main);
+	Emit.on('a', main);
+	Emit.on('a', main);
+	Emit.on('a', main);
+	Emit.on('a', main);
+	Emit.on('a', main);
+	Emit.on('a', main);
+	Emit.on('b', main);
+	Emit.on('b', main);
+	Emit.on('b', main);
+	Emit.on('b', main);
+
+	// Emit.destroy();
+	Emit.state = {}
+
+	// Emit.removeListener('a', main);
+	Emit.removeAllListeners('a');
+	console.log(Emit);
+	// Emit.emit('a','a1', 'a2');
+
+	// function main(num){
+	// 	var totle = 0;
+	// 	while( totle < 1000 ){
+	// 		console.log(num);
+	// 		num = 2*num;
+	// 		totle += num; 
+	// 	};
+	// };
+
+	// main(1.8);
+
+
 
 })();
 </script>

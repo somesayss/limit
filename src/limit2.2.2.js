@@ -2262,11 +2262,11 @@
 	// 对IE下 JSON.stringify 的修复
 	;(function(JSON){
 		let rex = /(\\u\w{4})/g;
-		JSON.stringify = function(json, replacer, space){
+		JSON.stringify = function(json){
 			if( json == null ){
 				json = '';
 			};
-			let str = stringify(json, replacer, space);
+			let str = stringify(json);
 			if( str ){
 				return str.replace(rex, function(a){
 					return new Function('return "'+a+'"')();

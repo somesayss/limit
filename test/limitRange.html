@@ -11,15 +11,54 @@
 <script type="text/javascript" charset="utf-8" src="/libs/es5.js"></script>
 <script type="text/javascript" charset="utf-8" src="/dist/limit.js"></script>
 </head>
-<body>
+<body contentEditable="true">
+<div id="list">
+	<ul>
+		<li>a1</li>
+		<li>a2</li>
+		<li>a3</li>
+		<li>a4</li>
+		<li>a5</li>
+	</ul>
+</div>
+<p id="p1">1234566</p>
+<input type="button" id="click" value="插入一个节点" />
 <script type="text/javascript">
 "use strict";
 ;(function(){
 
-	// 参考http://www.cnblogs.com/yupeng/archive/2012/03/20/2405459.html
+	// http://www.cnblogs.com/rainman/archive/2011/02/27/1966482.html
+	// http://www.cnblogs.com/rainman/archive/2011/02/28/1967488.html
 
-	// 测试 ajax 的 progress 事件
+	var cursorNode = null;
+	var cursorOffset = null;
 
+	// 插入节点
+	function insertNode(){
+		var oRange = document.createRange();
+   		var oSpan = document.createElement("span");
+    	oSpan.appendChild(document.createTextNode("Inserted text"));
+    	oRange.setStart(cursorNode, cursorOffset);
+    	oRange.setEnd(cursorNode, cursorOffset);
+    	oRange.insertNode(oSpan);
+    	setCursor(oSpan);
+	};
+
+	// 重新设置光标
+	function setCursor(span){
+		var selection = window.getSelection();
+		selection.collapse(span.nextSibling, 0);
+	};
+
+	document.getElementById('click').onclick = function(){
+		insertNode();
+	};
+
+	document.onselectionchange = function(){
+		var selection = window.getSelection();
+		cursorNode = selection.anchorNode;
+		cursorOffset = selection.anchorOffset;
+	};
 	
 
 })();
