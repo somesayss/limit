@@ -1,7 +1,7 @@
 "use strict";
 /**
- * 2017.2.4
- * version: 2.2.0
+ * 2018.1.12
+ * version: 2.2.3
  * 增加了日志缓存
  * 增加了 limit.parseInt 替换 ~~ 操作符
  * 增加了 Map 类 使用Map重构了union
@@ -13,6 +13,7 @@
  * 增加了字符串驼峰话方法
  * 增加已时间为Key的唯一ID
  * Eventdestroy的时候的问题[me.state={}]
+ * Promise.finally() 方法如果原生支持就用原生的
  */
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -182,7 +183,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	defineIt('F', { value: F });
 
 	// 版本
-	defineIt('V', { value: '2.2.2' });
+	defineIt('V', { value: '2.2.3' });
 
 	// 获取属性
 	defineIt('getProp', { value: getProp });
@@ -1771,7 +1772,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	});
 
 	if (winPromise) {
-		winPromise.prototype['finally'] = MyPromise.prototype['finally'];
+		if (!winPromise.prototype['finally']) {
+			winPromise.prototype['finally'] = MyPromise.prototype['finally'];
+		};
 	} else {
 		WIN.Promise = MyPromise;
 	};
