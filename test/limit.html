@@ -16,7 +16,15 @@
 "use strict";
 ;(function(){
 
-	console.log(123);
+	// limit.limitFixed = true;
+
+	// var myPromise = limit.promise();
+
+	var myPromise = Promise;
+	
+	Promise.resolve(new Promise((a, b) => {b('error')})).then((a) => {console.log('a resolve',a)}, (b) => {console.log('b resolve',b)})
+	
+	Promise.reject(new Promise((a, b) => {b('error')})).then((a) => {console.log('a reject',a)}, (b) => {console.log('b reject',b)})
 
 })();
 </script>

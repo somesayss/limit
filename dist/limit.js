@@ -1,7 +1,7 @@
 "use strict";
 /**
- * 2018.1.12
- * version: 2.2.3
+ * 2018.2.8
+ * version: 2.2.5
  * 增加了日志缓存
  * 增加了 limit.parseInt 替换 ~~ 操作符
  * 增加了 Map 类 使用Map重构了union
@@ -14,6 +14,8 @@
  * 增加已时间为Key的唯一ID
  * Eventdestroy的时候的问题[me.state={}]
  * Promise.finally() 方法如果原生支持就用原生的
+ * finally方法和原生用法保持一致
+ * Event 更换标准写法
  */
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -183,7 +185,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	defineIt('F', { value: F });
 
 	// 版本
-	defineIt('V', { value: '2.2.3' });
+	defineIt('V', { value: '2.2.5' });
 
 	// 获取属性
 	defineIt('getProp', { value: getProp });
@@ -1754,7 +1756,23 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	};
 
 	MyPromise.prototype['finally'] = function (fn) {
-		return this.then(K, K).then(fn);
+		var isSuucess = true;
+		var sucResult = void 0;
+		var errResult = void 0;
+		return this.then(function (result) {
+			sucResult = result;
+		}, function (result) {
+			isSuucess = false;
+			errResult = result;
+		}).then(function (val) {
+			return fn();
+		}).then(function () {
+			if (isSuucess) {
+				return sucResult;
+			} else {
+				throw errResult;
+			};
+		});
 	};
 
 	var winPromise = WIN.Promise;
@@ -2013,13 +2031,15 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	// 事件
 
 	var Events = function () {
-		function Events() {
+		function Events(config) {
 			_classCallCheck(this, Events);
 
 			this.state = {
-				maxListeners: 10,
 				listeners: {}
 			};
+
+			var me = this;
+			limit.assign(me.state, Events.props, config);
 		}
 
 		_createClass(Events, [{
@@ -2143,7 +2163,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 			value: function destroy() {
 				var me = this;
 				delete me.state;
-				delete me.props;
 				return me;
 			}
 		}]);
@@ -2151,6 +2170,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		return Events;
 	}();
 
+	Events.props = {
+		maxListeners: 10
+	};
 	;
 
 	defineIt('Events', {

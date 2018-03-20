@@ -1,7 +1,7 @@
 "use strict";
 /**
- * 2018.1.12
- * version: 2.2.3
+ * 2018.2.8
+ * version: 2.2.5
  * 增加了日志缓存
  * 增加了 limit.parseInt 替换 ~~ 操作符
  * 增加了 Map 类 使用Map重构了union
@@ -14,6 +14,8 @@
  * 增加已时间为Key的唯一ID
  * Eventdestroy的时候的问题[me.state={}]
  * Promise.finally() 方法如果原生支持就用原生的
+ * finally方法和原生用法保持一致
+ * Event 更换标准写法
  */
 
 ;(function(WIN){
@@ -115,7 +117,7 @@
 	defineIt('F', {value: F});
 
 	// 版本
-	defineIt('V', {value: '2.2.3'});
+	defineIt('V', {value: '2.2.5'});
 
 	// 获取属性
 	defineIt('getProp', {value: getProp});
@@ -1354,15 +1356,34 @@
 		};
 
 		MyPromise.prototype['finally'] = function(fn){
-			return this.then(K, K).then(fn);
+			let isSuucess = true;
+			let sucResult;
+			let errResult;
+			return this.then((result) => {
+				sucResult = result;
+			}, (result) => {
+				isSuucess = false;
+				errResult = result;
+			}).then((val) => fn()).then(() => {
+				if( isSuucess ){
+					return sucResult;
+				}else{
+					throw errResult
+				};
+			});
 		};
 
 		const winPromise = WIN.Promise;
 
+
 		defineIt('promise', {
 			when: () => !!winPromise,
-			priority: () => winPromise,
-			fixed: () => MyPromise
+			priority: () => {
+				return winPromise;
+			},
+			fixed: () => {
+				return MyPromise;
+			}
 		});
 
 		if( winPromise ){
@@ -1544,9 +1565,15 @@
 
 		// 事件
 		class Events {
+			static props = {
+				maxListeners: 10
+			}
 			state = {
-				maxListeners: 10,
 				listeners: {}
+			}
+			constructor(config){
+				let me = this;
+				limit.assign(me.state, Events.props, config);
 			}
 			warnListenerCount(eventName){
 				let me = this;
@@ -1637,7 +1664,6 @@
 			destroy(){
 				let me = this;
 				delete me.state;
-				delete me.props;
 				return me;
 			}
 		};
