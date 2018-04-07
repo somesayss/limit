@@ -1,7 +1,7 @@
 "use strict";
 /**
- * 2018.2.8
- * version: 2.2.5
+ * 2018.4.7
+ * version: 2.2.6
  * 增加了日志缓存
  * 增加了 limit.parseInt 替换 ~~ 操作符
  * 增加了 Map 类 使用Map重构了union
@@ -16,6 +16,7 @@
  * Promise.finally() 方法如果原生支持就用原生的
  * finally方法和原生用法保持一致
  * Event 更换标准写法
+ * Injection 依赖注入类的实现
  */
 
 ;(function(WIN){
@@ -117,7 +118,7 @@
 	defineIt('F', {value: F});
 
 	// 版本
-	defineIt('V', {value: '2.2.5'});
+	defineIt('V', {value: '2.2.6'});
 
 	// 获取属性
 	defineIt('getProp', {value: getProp});
@@ -1500,6 +1501,65 @@
 		if( !winMap ){
 			WIN.Map = MyMap;
 		}
+
+		// Injection
+		class Injection {
+			static props = {}
+			state = {
+				desc: {}
+			}
+			constructor(config){
+				let me = this;
+				limit.assign(me.state, Injection.props ,config);
+			}
+			getRelyList(relyList){
+				let me = this;
+				let { state: { desc } } = me;
+				let list = [];
+				let hasNotDeinfed = relyList.some((val, key) => {
+					let name = desc[val];
+					if (!name) {
+						limit.err(`${name} is undefined`);
+						return true;
+					};
+					list[key] = name;
+				});
+				return hasNotDeinfed ? null : list;
+			}
+			define(name, list, fun){
+				let me = this;
+				let {state: {desc}} = me;
+				if ( desc[name] ){
+					limit.war(`${name} is defined`);
+				};
+				if( limit.isArray(list) ){
+					if (list.length) {
+						let relyList = me.getRelyList(list);
+						if (relyList) {
+							desc[name] = Function.bind.apply(fun, [undefined].concat(list));
+						};
+					} else {
+						desc[name] = fun;
+					};
+				}else{
+					desc[name] = list;
+				};
+				return me;
+			}
+			require(list, method, context){
+				let me = this;
+				let { state: { desc } } = me;
+				let relyList = me.getRelyList(list);
+				if (relyList ){
+					Function.call.apply(method, [context].concat(relyList) );
+				};
+				
+			}
+		};
+
+	defineIt('Injection', {
+		value: Injection
+	});
 
 		// 创建原型
 		function C(){};

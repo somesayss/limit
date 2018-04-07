@@ -8,7 +8,7 @@
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -45,52 +45,52 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	limit.logClosed = false;
 
 	// 自有属性
-	var defineProperty = Object.defineProperty;
-	var is = Object.is;
-	var assign = Object.assign;
-	var keys = Object.keys;
-	var values = Object.values;
-	var entries = Object.entries;
-	var getOwnPropertyNames = Object.getOwnPropertyNames;
-	var toString = objectProto.toString;
-	var hasOwnProperty = objectProto.hasOwnProperty;
-	var valueOf = objectProto.valueOf;
-	var from = Array.from;
-	var of = Array.of;
-	var concat = arrayProto.concat;
-	var push = arrayProto.push;
-	var slice = arrayProto.slice;
-	var unshift = arrayProto.unshift;
-	var splice = arrayProto.splice;
-	var join = arrayProto.join;
-	var pop = arrayProto.pop;
-	var reverse = arrayProto.reverse;
-	var shift = arrayProto.shift;
-	var sort = arrayProto.sort;
-	var forEach = arrayProto.forEach;
-	var map = arrayProto.map;
-	var filter = arrayProto.filter;
-	var some = arrayProto.some;
-	var every = arrayProto.every;
-	var indexOf = arrayProto.indexOf;
-	var lastIndexOf = arrayProto.lastIndexOf;
-	var reduce = arrayProto.reduce;
-	var reduceRight = arrayProto.reduceRight;
-	var find = arrayProto.find;
-	var findIndex = arrayProto.findIndex;
-	var fill = arrayProto.fill;
-	var copyWithin = arrayProto.copyWithin;
+	var defineProperty = Object.defineProperty,
+	    is = Object.is,
+	    assign = Object.assign,
+	    keys = Object.keys,
+	    values = Object.values,
+	    entries = Object.entries,
+	    getOwnPropertyNames = Object.getOwnPropertyNames;
+	var toString = objectProto.toString,
+	    hasOwnProperty = objectProto.hasOwnProperty,
+	    valueOf = objectProto.valueOf;
+	var from = Array.from,
+	    of = Array.of;
+	var concat = arrayProto.concat,
+	    push = arrayProto.push,
+	    slice = arrayProto.slice,
+	    unshift = arrayProto.unshift,
+	    splice = arrayProto.splice,
+	    join = arrayProto.join,
+	    pop = arrayProto.pop,
+	    reverse = arrayProto.reverse,
+	    shift = arrayProto.shift,
+	    sort = arrayProto.sort,
+	    forEach = arrayProto.forEach,
+	    map = arrayProto.map,
+	    filter = arrayProto.filter,
+	    some = arrayProto.some,
+	    every = arrayProto.every,
+	    indexOf = arrayProto.indexOf,
+	    lastIndexOf = arrayProto.lastIndexOf,
+	    reduce = arrayProto.reduce,
+	    reduceRight = arrayProto.reduceRight,
+	    find = arrayProto.find,
+	    findIndex = arrayProto.findIndex,
+	    fill = arrayProto.fill,
+	    copyWithin = arrayProto.copyWithin;
 	var fromCodePoint = String.fromCodePoint;
-	var trim = stringProto.trim;
-	var codePointAt = stringProto.codePointAt;
-	var startsWith = stringProto.startsWith;
-	var endsWith = stringProto.endsWith;
-	var repeat = stringProto.repeat;
-	var padStart = stringProto.padStart;
-	var padEnd = stringProto.padEnd;
+	var trim = stringProto.trim,
+	    codePointAt = stringProto.codePointAt,
+	    startsWith = stringProto.startsWith,
+	    endsWith = stringProto.endsWith,
+	    repeat = stringProto.repeat,
+	    padStart = stringProto.padStart,
+	    padEnd = stringProto.padEnd;
 	var bind = functionProto.bind;
-	var parse = JSON.parse;
-	var stringify = JSON.stringify;
+	var parse = JSON.parse,
+	    stringify = JSON.stringify;
 
 	// 传递器
 
@@ -113,15 +113,15 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 	// 获取属性
 	var getProp = function getProp() {
-		var obj = arguments.length <= 0 || arguments[0] === undefined ? O : arguments[0];
-		var key = arguments.length <= 1 || arguments[1] === undefined ? '' : arguments[1];
+		var obj = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : O;
+		var key = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
 		var deVal = arguments[2];
 		return obj[key] === void 0 ? deVal : obj[key];
 	};
 
 	// 定义:priority,fixed,when,format
 	var defineIt = function defineIt(name) {
-		var config = arguments.length <= 1 || arguments[1] === undefined ? O : arguments[1];
+		var config = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : O;
 
 		var priority = void 0,
 		    fixed = void 0,
@@ -1784,8 +1784,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	defineIt('parseString', {
 		format: checkTargetWithString,
 		fixed: function fixed(str) {
-			var val1 = arguments.length <= 1 || arguments[1] === undefined ? '&' : arguments[1];
-			var val2 = arguments.length <= 2 || arguments[2] === undefined ? '=' : arguments[2];
+			var val1 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '&';
+			var val2 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '=';
 
 			str = decodeURIComponent(str);
 			var obj = {},
@@ -1824,8 +1824,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	defineIt('unParseString', {
 		format: checkTargetNoEqualNull,
 		fixed: function fixed(obj) {
-			var val1 = arguments.length <= 1 || arguments[1] === undefined ? '&' : arguments[1];
-			var val2 = arguments.length <= 2 || arguments[2] === undefined ? '=' : arguments[2];
+			var val1 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '&';
+			var val2 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '=';
 
 			var list = [];
 			limit.isObjectSuper(obj) && limit.each(obj, function (val, key) {
@@ -2063,7 +2063,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	defineIt('thousandSeparator', {
 		format: checkTargetWithNumber,
 		fixed: function fixed(num) {
-			var med = arguments.length <= 1 || arguments[1] === undefined ? 2 : arguments[1];
+			var med = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2;
 
 			med = checkPositive(med);
 			// 控制入参
@@ -2269,8 +2269,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 	var FUN_DATAS = ['getFullYear', 'getMonth', 'getDate', 'getHours', 'getMinutes', 'getSeconds'];
 	defineIt('formatDate', {
 		value: function value() {
-			var timestamp = arguments.length <= 0 || arguments[0] === undefined ? new Date().getTime() : arguments[0];
-			var formatStr = arguments.length <= 1 || arguments[1] === undefined ? 'yyyy-MM-dd HH:mm:ss' : arguments[1];
+			var timestamp = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new Date().getTime();
+			var formatStr = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'yyyy-MM-dd HH:mm:ss';
 
 			timestamp = new Date(timestamp);
 			formatStr = limit.toString(formatStr);
