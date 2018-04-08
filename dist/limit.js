@@ -452,6 +452,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 		}
 	});
 
+	// 是否为Proimise对象
+	defineIt('isPromise', {
+		value: function value(n) {
+			return !!(n && n.then);
+		}
+	});
+
 	// --检查参数-- //
 
 	// 如果是null undefined 返回空对象
@@ -1978,7 +1985,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 					if (list.length) {
 						var relyList = me.getRelyList(list);
 						if (relyList) {
-							desc[name] = Function.bind.apply(fun, [undefined].concat(list));
+							desc[name] = Function.bind.apply(fun, [undefined].concat(relyList));
 						};
 					} else {
 						desc[name] = fun;
@@ -1997,6 +2004,24 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 				var relyList = me.getRelyList(list);
 				if (relyList) {
 					Function.call.apply(method, [context].concat(relyList));
+				};
+			}
+		}, {
+			key: 'requireSuper',
+			value: function requireSuper(list, method, context) {
+				var me = this;
+				var desc = me.state.desc;
+
+				var relyList = me.getRelyList(list).map(function (rely) {
+					if (limit.isFunction(rely)) {
+						return rely();
+					};
+					return rely;
+				});
+				if (relyList) {
+					Promise.all(relyList).then(function (list) {
+						Function.call.apply(method, [context].concat(list));
+					});
 				};
 			}
 		}]);

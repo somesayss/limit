@@ -291,6 +291,13 @@
 			}
 		});
 
+		// 是否为Proimise对象
+		defineIt('isPromise', {
+			value(n){
+				return !!(n && n.then);
+			}
+		});
+
 	// --检查参数-- //
 
 		// 如果是null undefined 返回空对象
@@ -1536,7 +1543,7 @@
 					if (list.length) {
 						let relyList = me.getRelyList(list);
 						if (relyList) {
-							desc[name] = Function.bind.apply(fun, [undefined].concat(list));
+							desc[name] = Function.bind.apply(fun, [undefined].concat(relyList));
 						};
 					} else {
 						desc[name] = fun;
@@ -1553,7 +1560,21 @@
 				if (relyList ){
 					Function.call.apply(method, [context].concat(relyList) );
 				};
-				
+			}
+			requireSuper(list, method, context){
+				let me = this;
+				let { state: { desc } } = me;
+				let relyList = me.getRelyList(list).map((rely) => {
+					if (limit.isFunction(rely)) {
+						return rely();
+					};
+					return rely;
+				});
+				if (relyList) {
+					Promise.all(relyList).then((list) => {
+						Function.call.apply(method, [context].concat(list));
+					});
+				};
 			}
 		};
 
